@@ -99,7 +99,7 @@ header .header_right .links .link:active{
 }
 
 
-header .header_right .button_account{
+header .header_right .button_account, .button_steam_account{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -117,17 +117,17 @@ header .header_right .button_account{
     transition: all .3s ease;
 }
 
-header .header_right .button_account:hover{
+header .header_right .button_account:hover, .button_steam_account:hover{
     background-color: #005eff;
     box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.2);
 }
 
-header .header_right .button_account:active{
+header .header_right .button_account:active, .button_steam_account:active{
     transform: translate(0%, 2px);
     box-shadow: none;
 }
 
-header .header_right .button_account span{
+header .header_right .button_account span, .button_steam_account span{
     width: 100%;
     height: 100%;
     position: absolute;
@@ -138,13 +138,18 @@ header .header_right .button_account span{
     transition: all .3s ease;
 }
 
-header .header_right .button_account:hover span{
+header .header_right .button_account:hover span, .button_steam_account:hover span{
     box-shadow: none;
 }
 
-header .header_right .button_account:active span{
+header .header_right .button_account:active span, .button_steam_account:active span{
     box-shadow: none;
 }
+
+header .header_right .button_steam_account{
+    background-color: #116588be;
+}
+
 header #popupBtn {
     border: 1px solid #A0A1B8;
     border-radius: 10px;
