@@ -32,8 +32,8 @@ app.get('/account', async (req, res) => {
     const { code } = req.query;
     try {
         if (codes.includes(code)) { // code check logic should be here
-            let steamId = await getSteamId()
-            console.log(steamId)
+            // let steamId = await getSteamId()
+            // console.log(steamId)
             res.json({ message: 'Access granted'})  
         } else {
             res.json({ error: 'Wrong code' })
