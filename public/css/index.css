@@ -1,0 +1,287 @@
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    margin: 0;
+}
+
+body.lock{
+    overflow-y: hidden;
+}
+
+:root {
+    --scrollbar-width: 0;
+}
+
+.none{
+    display: none;
+}
+
+
+
+
+
+main{
+    width: 100%;
+    height: 100vh;
+    min-height: 900px;
+    position: relative;
+    background-color: #030024;
+}
+
+body.lock main{
+    margin-right: 17px;
+}
+
+
+
+
+
+main .block_info{
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+    width: 1100px;
+    position: absolute;
+    top: 150px;
+    left: 100px;
+    z-index: 2;
+}
+
+
+
+
+main .block_info .block_info__buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    width: 100%;
+}
+
+main .block_info .block_info__buttons .button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 141px;
+    height: 60px;
+    color: white;
+    font-family: "Poppins Medium";
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 3px;
+    border: 1px solid #55526B;
+    padding: 0 12px 0 8px;
+    transition: all .3s ease;
+}
+
+main .block_info .block_info__buttons .button:hover{
+    background-color: #55526B;
+    transform: scale(.97);
+}
+
+
+
+
+main .block_info .block_info__window{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    height: 500px;
+    padding: 10px 20px;
+    border: 1px solid #A0A1B8;
+    border-radius: 10px;
+    background-color: #424372;
+    overflow: hidden;
+}
+
+
+
+main .block_info .block_info__window .window_header{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 55px;
+}
+
+main .block_info .block_info__window .window_header .header_button{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+    min-width: 90px;
+    color: white;
+    font-family: "Poppins Medium";
+    font-size: 20px;
+    text-decoration: none;
+    border-radius: 3px;
+    border: 1px solid #757698;
+    padding: 0 50px 0 15px;
+    margin: 0 20px;
+    transition: all .3s ease;
+}
+
+main .block_info .block_info__window .window_header .header_button:nth-child(2){
+    min-width: 100px;
+}
+
+main .block_info .block_info__window .window_header #button-run._active{
+    background-color: #71455A;
+}
+
+main .block_info .block_info__window .window_header .header_button:hover{
+    background-color: #757698;
+    transform: scale(1.05);
+}
+
+main .block_info .block_info__window .window_header .header_button:active{
+    background-color: #757698;
+    transform: scale(1);
+}
+
+main .block_info .block_info__window .window_header .header_button img{
+    width: 32px;
+    height: 26px;
+    object-fit: cover;
+    transition: all .3s ease;
+}
+
+main .block_info .block_info__window .window_header .header_button:nth-child(2) img{
+    width: 25px;
+    height: 27px;
+}
+
+
+
+main .block_info .block_info__window .window_text{
+    width: 100%;
+    height: 400px;
+    border: 1px solid #DCDDE5;
+    border-radius: 10px;
+    background-color: #8E8EAA;
+}
+
+
+main .block_info .block_info__window .window_text .text{
+    position: relative;
+    padding: 15px 30px 15px 20px;
+}
+
+main .block_info .block_info__window .window_text .text::after{
+    content: "";
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #D1D1E5;
+}
+
+main .block_info .block_info__window .window_text .text:last-child:after{
+    display: none;
+}
+
+main .block_info .block_info__window .window_text h3{
+    color: white;
+    font-family: "Poppins Medium";
+    font-size: 22px;
+    margin: 0 0 15px;
+}
+
+main .block_info .block_info__window .window_text h2{
+    color: white;
+    font-family: "Poppins Medium";
+    font-size: 20px;
+    margin: 0 0 15px;
+}
+
+main .block_info .block_info__window .window_text p{
+    color: white;
+    font-family: "Poppins Medium";
+    font-size: 17px;
+    margin: 0 0 15px;
+}
+
+main .block_info .block_info__window .window_text p:last-child{
+    margin: 0;
+}
+
+main .block_info .block_info__window .window_text p.text_warning{
+    color: #FF9900;
+}
+main .block_info .block_info__window .window_text p.text_inspect{
+    color: #000000;
+}
+
+main .block_info .block_info__window .window_text p.text_mini{
+    font-size: 13px;
+}
+
+
+main .block_info .block_info__window .window_text .simplebar-vertical{
+    width: 18px !important;
+    padding-top: 20px;
+    border-left: 1px solid #DCDDE5;
+    border-radius: 0 10px 10px 0;
+    background-color: #8E8EAA;
+}
+
+main .block_info .block_info__window .window_text .simplebar-vertical::before{
+    content: "";
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 7px;
+    left: 5.5px;
+    background: url("../img/icons/icon_scrollbar_arrow.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+main .block_info .block_info__window .window_text .simplebar-vertical::after{
+    content: "";
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    bottom: 7px;
+    left: 5px;
+    background: url("../img/icons/icon_scrollbar_arrow.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    transform: rotate(180deg);
+}
+
+main .block_info .block_info__window .window_text .simplebar-vertical .simplebar-scrollbar{
+    border-radius: 0;
+}
+
+main .block_info .block_info__window .window_text .simplebar-vertical .simplebar-scrollbar::before{
+    width: calc(100% + 2px);
+    height: calc(100% - 45px);
+    left: 0;
+    border-radius: 0;
+    background-color: #424372;
+}
+
+
+
+
+main .patterns{
+    width: 750px;
+    height: 500px;
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+main .patterns img{
+    width: 1200px;
+    height: 800px;
+    object-fit: cover;
+}

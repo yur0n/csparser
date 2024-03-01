@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Interface</title>
+
+
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/settings.css">
+
+    <link rel="stylesheet" href="/css/media/index_media.css">
+
+
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css"/>
+</head>
+<body>
+<header>
+    <div class="header_left">
+        <a href="" class="button_burger" id="button-open-settings">
+            <img src="img/icons/icon_button_burger.svg" alt="">
+        </a>
+    </div>
+    <div class="header_right">
+        <div class="links">
+            <a href="https://twitter.com/?lang=ru" class="link">
+                <span><img src="img/icons/icon_twitter.svg" alt=""></span>
+                Twitter
+            </a>
+
+            <a href="https://vk.com" class="link">
+                <span><img src="img/icons/icon_vk.svg" alt=""></span>
+                Vkontakte
+            </a>
+
+            <a href="https://t.me/nemorgenshtern" class="link">
+                <span><img src="img/icons/icon_telegram.svg" alt=""></span>
+                Telegram
+            </a>
+        </div>
+
+        <a href="" class="button_account">Link account<span></span></a>
+    </div>
+</header>
+
+<main>
+    <div class="block_info">
+        <div class="block_info__buttons">
+            <a href="" class="button">autobuy</a>
+            <a href="" class="button">katowice2014</a>
+            <a href="" class="button">default price</a>
+            <a href="" class="button">extra price</a>
+        </div>
+
+        <div class="block_info__window">
+            <div class="window_header">
+                <a href="" class="header_button" id="button-run">
+                    <img src="img/icons/icon_run.svg" alt="">
+                    <span>Run</span>
+                </a>
+
+                <a href="" class="header_button" id="button-clear">
+                    <img src="img/icons/icon_clear.svg" alt="">
+                    <span>Clear</span>
+                </a>
+                </a>
+            </div>
+
+            <div class="window_text" data-simplebar data-simplebar-auto-hide="false">
+                <div class="text">
+                </div>
+
+<!--                <div class="text">-->
+<!--                    <h3>Lorem ipsum dolor sit amet</h3>-->
+<!--                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus numquam beatae vitae? Architecto perferendis, nisi iure sit veniam consectetur illo repellat soluta nihil vel magni mollitia minus cupiditate molestias. Commodi.</p>-->
+<!--                    <p class="text_mini">Lorem ipsum dolor</p>-->
+<!--                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus numquam beatae vitae? Architecto perferendis, nisi iure sit veniam consectetur illo repellat soluta nihil vel magni mollitia minus cupiditate molestias. Commodi.</p>-->
+<!--                </div>-->
+
+                <div class="text">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="patterns">
+        <img src="img/patterns/ellipse.svg" alt="">
+    </div>
+</main>
+
+
+<div class="popup_settings none">
+    <div class="popup__body">
+
+        <div class="popup__content" data-simplebar data-simplebar-auto-hide="false">
+            <div class="popup_header">
+                <div class="popup__close">
+                    <img src="img/icons/icon_button_burger.svg" alt="">
+                </div>
+
+                <h1>settings</h1>
+            </div>
+
+            <div class="popup_main">
+                <div class="block_two_small">
+                    <div class="small_block block_range">
+                        <div class="text">
+                            <p>% Minimal profit for item</p>
+                        </div>
+
+                        <div class="block_value">
+                            <p class="block_value__text">Min Profit</p>
+
+                            <input type="text" name="minProfit" value="1" id="input-value">
+                        </div>
+
+                        <input type="range" name="minProfit" min="0" max="100" value="1" id="range-value">
+                    </div>
+
+                    <div class="small_block block_range">
+                        <div class="text">
+                            <p>% Overpayment for stickers</p>
+                        </div>
+
+                        <div class="block_value">
+                            <p class="block_value__text">Min %</p>
+
+                            <input type="text" name="stickerOverpay" value="20" id="input-value">
+                        </div>
+
+                        <input type="range" name="stickerOverpay" min="0" max="100" value="20" id="range-value">
+                    </div>
+                </div>
+
+                <div class="block_two_small">
+                    <div class="small_block block_empty">
+                        <div class="block_value">
+                            <p class="block_value__text"></p>
+                        </div>
+                    </div>
+
+                    <div class="small_block block_notifications">
+                        <div class="text">
+                            <p>notifications telegram</p>
+                        </div>
+
+                        <div class="block_value">
+                            <p class="block_value__text">Chat id</p>
+
+                            <input type="text" name="" value="20" id="value">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block_one_big">
+                    <div class="big_block"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="proxy.js"></script>
+<script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+<script src="/js/newscript.js"></script>
+<script src="/js/settings.js"></script>
+<script src="/js/window_info.js"></script>
+<script src="/js/account.js"></script>
+
+</body>
+</html>
