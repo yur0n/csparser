@@ -41,14 +41,15 @@
                 Telegram
             </a>
         </div>
-
+        <button class="button_account"><a>Link Steam<span></span></a></button>
         <button class="button_account"><a>Link account<span></span></a></button>
         <div id="popupBtn">
-            <p><strong>Enter your code:</strong></p>
+            <p style="color: antiquewhite;"><strong>Enter your code:</strong></p>
             <input class="button" type="text" id="codeInput">
             <button class="button" id="submitAccButton">Submit</button>
             <br>
-            <p><strong>Status: </strong><span class="account_status"></span></p>
+            <p style="color: antiquewhite;"><strong>Status: </strong><span class="account_status"></span></p>
+            <button id="closeBtn">×</button>
         </div>
     </div>
 </header>
@@ -68,13 +69,6 @@
                     <img src="img/icons/icon_run.svg" alt="">
                     <span>Run</span>
                 </a>
-                <!-- <a href="" class="header_button" id="button-stop">
-                    <img src="img/icons/icon_run.svg" alt="">
-                    <span>Stop</span>
-                </a> -->
-                
-                
-
                 <a href="" class="header_button" id="button-clear">
                     <img src="img/icons/icon_clear.svg" alt="">
                     <span>Clear</span>
@@ -179,9 +173,8 @@
 
 <!-- <script src="proxy.js"></script> -->
 <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
-<script src="/js/newscript.js"></script>
+<script src="/js/mainscript.js"></script>
 <script src="/js/settings.js"></script>
-<script src="/js/window_info.js"></script>
 <script src="/js/account.js"></script>
 
 </body>

@@ -3,12 +3,25 @@ const popup = document.getElementById("popupBtn");
 const submitButton = document.getElementById("submitAccButton");
 const codeInput = document.getElementById("codeInput");
 const accountStatus = document.querySelector('.account_status')
+const closePopup = document.getElementById("closeBtn")
 
 button.addEventListener("click", () => {
 	popup.style.display = "block"; // Show the popup
 	codeInput.value = ""; // Clear previous input
+	let oldCode = localStorage.getItem('code')
+	if (oldCode) {
+		accountStatus.style.color = 'lightgreen'
+		accountStatus.textContent = 'Account is linked'
+	} else {
+		accountStatus.style.color = 'HotPink'
+		accountStatus.textContent = 'Account not linked'
+	}
 });
-  
+
+closePopup.addEventListener("click", function() {
+	popup.style.display = "none";
+});
+
 submitButton.addEventListener("click", async () => {
 	const code = codeInput.value;
 	if (code) {

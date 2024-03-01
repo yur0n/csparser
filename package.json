@@ -2,9 +2,10 @@
   "name": "parser",
   "version": "1.0.0",
   "description": "",
-  "main": "newserver.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon newserver.js -e *"
+    "start": "node server.js",
+    "dev": "nodemon server.js -e *"
   },
   "author": "",
   "license": "ISC",

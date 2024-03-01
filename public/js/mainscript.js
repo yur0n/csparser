@@ -1,4 +1,3 @@
-let intervals = []
 document.addEventListener('DOMContentLoaded', function () {
     const windowText = document.querySelector('.window_text .text');
     const runButton = document.getElementById('button-run');
@@ -6,10 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const offButton = document.querySelector('.header_button:nth-last-child(2)');
 
     let isRunning = false;
-
+    let interval
 
     // Функция для запроса данных и вывода
-    async function fetchDataAndDisplay(run) {
+    async function fetchDataAndDisplay() {
         try {
             const goodsId = '857550'
             const code = localStorage.getItem("code")
@@ -57,31 +56,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if (isRunning) {
-            let interval = setTimeout(fetchDataAndDisplay, 6000);
-            intervals.push(interval)
+            interval = setTimeout(fetchDataAndDisplay, 6000);
         }
     }
 
     // Обработчик события клика на кнопку "Run"
-    runButton.addEventListener('click', function () {
-        const code = localStorage.getItem("code")
-        if (!code) return 
-        if (true) {
-            for (var i = 0; i < intervals.length; i++) {
-                clearTimeout(intervals[i]);
+    runButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        let code = localStorage.getItem('code')
+        if (!code) return
+        if (runButton.classList.contains("_active")){
+            runButton.style.pointerEvents = 'none'
+            setTimeout(() => runButton.style.pointerEvents = '', 3000)
+            isRunning = false;
+            clearInterval(interval)
+            runButton.querySelector("span").innerText = "Run";
+            runButton.classList.remove("_active");
+        } else {
+            if (!isRunning) {
+                isRunning = true;
+                fetchDataAndDisplay();
             }
-            isRunning = true; // Устанавливаем флаг выполнения в true
-            fetchDataAndDisplay();
-
-            // обработчик события для кнопки "Off"
-            const offButton = document.querySelector('.header_button:nth-last-child(2)');
-            offButton.addEventListener('click', function(event) {
-                event.preventDefault();
-                for (var i = 0; i < intervals.length; i++) {
-                    clearTimeout(intervals[i]);
-                }
-                isRunning = false;
-            });
+            runButton.querySelector("span").innerText = "Off";
+            runButton.classList.add("_active");
         }
     });
 

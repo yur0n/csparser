@@ -3,12 +3,12 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 // const users = require('./database');
-const fs = require('fs');
 const {csparser} = require('./csparser.js')
+const {getSteamId} = require('./getSteamId.js')
 
 const app = express();
 const PORT = 8080;
-let codes = ['1', '33']
+let codes = ['838295', '95973', '615738', '519592', '287358']
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -23,16 +23,17 @@ app.use((req, res, next) => {
 });
 
 app.get('', async (req, res) => {
-    res.sendFile(path.join(__dirname, 'site.html'))
+    res.sendFile(path.join(__dirname, 'index.html'))
 })
 
 
 
 app.get('/account', async (req, res) => {
     const { code } = req.query;
-    console.log(code)
     try {
         if (codes.includes(code)) { // code check logic should be here
+            let steamId = await getSteamId()
+            console.log(steamId)
             res.json({ message: 'Access granted'})  
         } else {
             res.json({ error: 'Wrong code' })
@@ -44,7 +45,6 @@ app.get('/account', async (req, res) => {
 
 app.get('/min-price', async (req, res) => {
     const {code, goodsId, minProfit, stickerOverpay } = req.query;
-
     if (!codes.includes(code)) return res.json({ error: 'ACTIVATE SUBSCRIPTION' }) // code check logic should be here
  
     const data = await csparser(goodsId, minProfit, stickerOverpay);

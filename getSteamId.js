@@ -2,7 +2,7 @@ const { Builder, By } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs').promises;
 
-async function example() {
+async function getSteamId() {
     let options = new chrome.Options();
     options.addArguments('--headless');
     options.addArguments('--disable-gpu');
@@ -25,20 +25,23 @@ async function example() {
 
         if (tLeftElementsWithSteamBind.length === 0) {
             console.error("Элементы не найдены");
+            return false
         } else {
             console.log("Элементы найдены:");
-
+            let result = []
             // Используем Promise.all для параллельного выполнения
             await Promise.all(tLeftElementsWithSteamBind.map(async (element) => {
                 const text = await element.getText();
-                console.log(text);
+                result.push(text)
             }));
+            return result
         }
     } catch (error) {
         console.error("Ошибка:", error);
+        return false
     } finally {
         await driver.quit();
     }
 }
 
-example();
+module.exports = { getSteamId }

@@ -157,3 +157,20 @@ header #popupBtn {
     display: none;
     z-index: 10; /* Set a high z-index to ensure it's above other elements */
 }
+
+header #popupBtn #closeBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: none; /* Make transparent */
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #a9a9a9; /* Adjust color as desired */
+    cursor: pointer;
+}
+  
+header #popupBtn #closeBtn:hover {
+    color: black; /* Change color on hover */
+}
