@@ -13,6 +13,7 @@ submitButton.addEventListener("click", async () => {
 	const code = codeInput.value;
 	if (code) {
 		try {
+			localStorage.setItem("code", code);
 			accountStatus.style.color = 'lightblue'
 			accountStatus.textContent = 'Checking your code...'
 			const response = await fetch(`/account?code=${code}`);
@@ -22,7 +23,6 @@ submitButton.addEventListener("click", async () => {
 				accountStatus.style.color = 'HotPink'
 				accountStatus.textContent = responseData.error
 			} else {
-				localStorage.setItem("code", code);
 				accountStatus.style.color = 'lightgreen'
 				accountStatus.textContent = responseData.message
 			}
