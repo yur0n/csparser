@@ -9,15 +9,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Функция для запроса данных и вывода
     async function fetchDataAndDisplay() {
         try {
-            // minProfit stickerOverpay находятся в settings.js
             const goodsId = '857550'
-            const code = await localStorage.getItem("code")
+            const code = localStorage.getItem("code")
             const response = await fetch(`/min-price?code=${code}&goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}`);
             const responseData = await response.json();
 
             console.log('Response Data:', responseData);
 
-            if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length) {
+            if (responseData && responseData.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
 
                 windowText.innerHTML = '';
 
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <ul>${stickerList}</ul>
                     <p>Total Sticker Price: ¥${item.total_sticker_price}</p>
                     <a href="${item.link}" target="_blank"><p>click to buy</p></a> 
-                    `;
+                `;
                     windowText.appendChild(resultItem);
 
                     //  разделитель после каждого элемента, кроме последнего
@@ -45,8 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         windowText.appendChild(divider);
                     }
                 });
-            } else if (responseData?.error){
-                windowText.innerText = responseData.error;
             } else {
                 windowText.innerText = 'No data available';
             }
@@ -63,6 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик события клика на кнопку "Run"
     runButton.addEventListener('click', function () {
+        const code = localStorage.getItem("code")
+        if (!code) return 
         if (!isRunning) {
             isRunning = true; // Устанавливаем флаг выполнения в true
             fetchDataAndDisplay();
@@ -82,3 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
         windowText.innerText = '';
     });
 });
+
+// const code = localStorage.getItem("code")
+// if (!code) return
+// const allow = await fetch(`/account?code=${code}`).then(res => res.json())
+// if (allow?.message !== 'Access granted') return
