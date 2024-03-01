@@ -145,3 +145,15 @@ header .header_right .button_account:hover span{
 header .header_right .button_account:active span{
     box-shadow: none;
 }
+header #popupBtn {
+    border: 1px solid #A0A1B8;
+    border-radius: 10px;
+    background-color: #424372;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    display: none;
+    z-index: 10; /* Set a high z-index to ensure it's above other elements */
+}

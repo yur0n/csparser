@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // minProfit stickerOverpay находятся в settings.js
             const goodsId = '857550'
-            
-            const response = await fetch(`/min-price?goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}`);
+            const code = await localStorage.getItem("code")
+            const response = await fetch(`/min-price?code=${code}&goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}`);
             const responseData = await response.json();
 
             console.log('Response Data:', responseData);
 
-            if (responseData && responseData.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
+            if (responseData?.data && Array.isArray(responseData.data) && responseData.data.length) {
 
                 windowText.innerHTML = '';
 
@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         windowText.appendChild(divider);
                     }
                 });
+            } else if (responseData?.error){
+                windowText.innerText = responseData.error;
             } else {
                 windowText.innerText = 'No data available';
             }

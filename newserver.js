@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 
 const app = express();
-const port = 4000;
+const PORT = 8080;
 const pricesDict = {};
 
 app.use(bodyParser.json());
@@ -111,10 +111,28 @@ app.get('', async (req, res) => {
     res.sendFile(path.join(__dirname, 'site.html'))
 })
 
-app.get('/min-price', async (req, res) => {
-    const { goodsId, minProfit, stickerOverpay } = req.query;
-    const data = await getMinPrice(goodsId, minProfit, stickerOverpay);
+let codes = []
+app.get('/account', async (req, res) => {
+    const { code } = req.query;
+    console.log(code)
+    try {
+        if (code == 1) { // code check logic should be here
+            codes.push(code)
+            res.json({ message: 'Access granted'})  
+        } else {
+            res.json({ error: 'Wrong code' })
+        }
+    } catch (e) {
+        res.status(500).json({ error: 'Server error' })
+    }
+})
 
+app.get('/min-price', async (req, res) => {
+    const {code, goodsId, minProfit, stickerOverpay } = req.query;
+
+    if (!codes.includes(code)) return res.json({ error: 'ACTIVATE SUBSCRIPTION' })
+
+    const data = await getMinPrice(goodsId, minProfit, stickerOverpay);
     if (data) {
         res.json({ data });
     } else {
@@ -123,7 +141,6 @@ app.get('/min-price', async (req, res) => {
 });
 
 
-const PORT = 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
