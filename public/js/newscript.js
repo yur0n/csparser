@@ -1,3 +1,4 @@
+let intervals = []
 document.addEventListener('DOMContentLoaded', function () {
     const windowText = document.querySelector('.window_text .text');
     const runButton = document.getElementById('button-run');
@@ -6,8 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let isRunning = false;
 
+
     // Функция для запроса данных и вывода
-    async function fetchDataAndDisplay() {
+    async function fetchDataAndDisplay(run) {
         try {
             const goodsId = '857550'
             const code = localStorage.getItem("code")
@@ -19,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (responseData && responseData.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
 
                 windowText.innerHTML = '';
-
                 responseData.data.forEach((item, index) => {
                     const resultItem = document.createElement('div');
                     const stickerList = item.stickers.map(sticker => {
@@ -54,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if (isRunning) {
-            setTimeout(fetchDataAndDisplay, 6000);
+            let interval = setTimeout(fetchDataAndDisplay, 6000);
+            intervals.push(interval)
         }
     }
 
@@ -62,7 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
     runButton.addEventListener('click', function () {
         const code = localStorage.getItem("code")
         if (!code) return 
-        if (!isRunning) {
+        if (true) {
+            for (var i = 0; i < intervals.length; i++) {
+                clearTimeout(intervals[i]);
+            }
             isRunning = true; // Устанавливаем флаг выполнения в true
             fetchDataAndDisplay();
 
@@ -70,6 +75,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const offButton = document.querySelector('.header_button:nth-last-child(2)');
             offButton.addEventListener('click', function(event) {
                 event.preventDefault();
+                for (var i = 0; i < intervals.length; i++) {
+                    clearTimeout(intervals[i]);
+                }
                 isRunning = false;
             });
         }
