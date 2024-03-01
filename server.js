@@ -39,6 +39,7 @@ app.get('/account', async (req, res) => {
             res.json({ error: 'Wrong code' })
         }
     } catch (e) {
+        console.log(e)
         res.status(500).json({ error: 'Server error' })
     }
 })
