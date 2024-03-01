@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         windowText.appendChild(divider);
                     }
                 });
+            } else if (responseData?.error) {
+                windowText.innerText = responseData.error;
             } else {
                 windowText.innerText = 'No data available';
             }
