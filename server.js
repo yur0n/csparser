@@ -53,8 +53,8 @@ passport.deserializeUser(function(obj, done) {
   //   credentials (in this case, an OpenID identifier and profile), and invoke a
   //   callback with a user object.
 passport.use(new SteamStrategy({
-        returnURL: process.env.HOST + PORT + '/auth/steam/return' || 'http://localhost:8080/auth/steam/return',
-        realm: process.env.HOST + PORT || 'http://localhost:8080/',
+        returnURL: process.env.HOST + ':' + PORT + '/auth/steam/return' || 'http://localhost:8080/auth/steam/return',
+        realm: process.env.HOST + ':' + PORT || 'http://localhost:8080/',
         apiKey: process.env.STEAM_API_KEY
     },
     function(identifier, profile, done) {
