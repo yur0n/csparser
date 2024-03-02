@@ -1,3 +1,4 @@
 *node_modules
 chromedriver
 *.DS_STORE
+.env

@@ -71,7 +71,8 @@ async function csparser(goodsId, minProfit, stickerOverpay) {
                         stickers: processedStickers,
                         link,
                         inspect_mobileurl,
-                        total_sticker_price: totalStickerPrice.toFixed(2)
+                        total_sticker_price: totalStickerPrice.toFixed(2),
+                        roundedProfit
                     });
                 }
             }

@@ -111,7 +111,7 @@ header .header_right .button_account, .button_steam_account{
     text-decoration: none;
     position: relative;
     z-index: 2;
-    background-color: #0500FF;
+    background-color: #424372;
     border-radius: 5px;
     box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.6);
     transition: all .3s ease;
@@ -124,25 +124,6 @@ header .header_right .button_account:hover, .button_steam_account:hover{
 
 header .header_right .button_account:active, .button_steam_account:active{
     transform: translate(0%, 2px);
-    box-shadow: none;
-}
-
-header .header_right .button_account span, .button_steam_account span{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    box-shadow: 0 0 15px 5px #005eff55;
-    transition: all .3s ease;
-}
-
-header .header_right .button_account:hover span, .button_steam_account:hover span{
-    box-shadow: none;
-}
-
-header .header_right .button_account:active span, .button_steam_account:active span{
     box-shadow: none;
 }
 

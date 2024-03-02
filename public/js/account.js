@@ -1,22 +1,34 @@
-const button = document.querySelector('.button_account')
+const codeButton = document.querySelector('.button_account')
+const steamButton = document.querySelector('.button_steam_account')
 const popup = document.getElementById("popupBtn");
 const submitButton = document.getElementById("submitAccButton");
 const codeInput = document.getElementById("codeInput");
 const accountStatus = document.querySelector('.account_status')
 const closePopup = document.getElementById("closeBtn")
 
-button.addEventListener("click", () => {
+codeButton.addEventListener("click", () => {
 	popup.style.display = "block"; // Show the popup
 	codeInput.value = ""; // Clear previous input
 	let oldCode = localStorage.getItem('code')
 	if (oldCode) {
 		accountStatus.style.color = 'lightgreen'
-		accountStatus.textContent = 'Account is linked'
-	} else {
+		accountStatus.textContent = 'Code provided'
+	} else { 
 		accountStatus.style.color = 'HotPink'
-		accountStatus.textContent = 'Account not linked'
+		accountStatus.textContent = 'Code not provided'
 	}
 });
+
+steamButton.addEventListener('click', (e) => {
+	if (e.target.textContent == 'Link Steam') {
+		localStorage.setItem('steam_id', true)
+		location.replace('/auth/steam')
+	}
+	if (e.target.textContent == 'Logout') {
+		localStorage.removeItem('steam_id')
+		location.replace('/logout')
+	}
+})
 
 closePopup.addEventListener("click", function() {
 	popup.style.display = "none";
@@ -35,6 +47,7 @@ submitButton.addEventListener("click", async () => {
 				accountStatus.style.color = 'HotPink'
 				accountStatus.textContent = responseData.error
 			} else {
+				document.cookie = `code=${code}; path=/`;
 				localStorage.setItem("code", code);
 				accountStatus.style.color = 'lightgreen'
 				accountStatus.textContent = responseData.message

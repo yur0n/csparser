@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <p>Stickers:</p>
                     <ul>${stickerList}</ul>
                     <p>Total Sticker Price: ¥${item.total_sticker_price}</p>
+                    <p>Profit: ${item.roundedProfit}%</p>
                     <a href="${item.link}" target="_blank"><p>click to buy</p></a> 
                 `;
                     windowText.appendChild(resultItem);
@@ -62,9 +63,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик события клика на кнопку "Run"
     runButton.addEventListener('click', function (e) {
+        
         e.preventDefault();
-        let code = localStorage.getItem('code')
-        if (!code) return
+        let proceed = localStorage.getItem('code') && localStorage.getItem('steam_id')
+        if (!proceed) return
         if (runButton.classList.contains("_active")){
             runButton.style.pointerEvents = 'none'
             setTimeout(() => runButton.style.pointerEvents = '', 3000)

@@ -41,8 +41,13 @@
                 Telegram
             </a>
         </div>
-        <button class="button_steam_account"><a>Link Steam<span></span></a></button>
-        <button class="button_account"><a>Link account<span></span></a></button>
+        <button class="button_account">Enter code</button>
+        <% if (!user) { %>
+            <button class="button_steam_account">Link Steam</button>
+        <% } else { %>
+            <img src='<%= user.photos[1].value %>' alt='Your Avatar Image' />
+            <button class="button_steam_account">Logout</button>
+        <% } %>
         <div id="popupBtn">
             <p style="color: antiquewhite;"><strong>Enter your code:</strong></p>
             <input class="button" type="text" id="codeInput">
@@ -72,6 +77,7 @@
                 <a href="" class="header_button" id="button-clear">
                     <img src="img/icons/icon_clear.svg" alt="">
                     <span>Clear</span>
+                </a>
                 </a>
             </div>
 
