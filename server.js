@@ -53,8 +53,8 @@ passport.deserializeUser(function(obj, done) {
   //   credentials (in this case, an OpenID identifier and profile), and invoke a
   //   callback with a user object.
 passport.use(new SteamStrategy({
-        returnURL: process.env.HOST + ':' + PORT + '/auth/steam/return' || 'http://localhost:8080/auth/steam/return',
-        realm: process.env.HOST + ':' + PORT || 'http://localhost:8080/',
+        returnURL: process.env.HOST? process.env.HOST + ':' + PORT + '/auth/steam/return' : 'http://localhost:8080/auth/steam/return',
+        realm: process.env.HOST? process.env.HOST + ':' + PORT : 'http://localhost:8080/',
         apiKey: process.env.STEAM_API_KEY
     },
     function(identifier, profile, done) {
@@ -129,7 +129,7 @@ app.get('/account', async (req, res) => {
         if (codes.includes(code)) { // code check logic should be here
             // let steamId = await getSteamId()
             // console.log(steamId)
-            res.json({ message: 'Access granted'})  
+            res.json({ message: 'Access granted'})
         } else {
             res.json({ error: 'Wrong code' })
         }
@@ -140,7 +140,6 @@ app.get('/account', async (req, res) => {
 })
 
 app.get('/min-price', ensureAuthenticated, async (req, res) => {
-    
     const {goodsId, minProfit, stickerOverpay } = req.query;
     if (!goodsId) return res.status(500).json({ error: 'Please, provide goods ID' })
     const data = await csparser(goodsId, minProfit, stickerOverpay);
