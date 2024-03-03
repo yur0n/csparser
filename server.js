@@ -1,5 +1,7 @@
 const express = require('express');
 require('./db/connection.js')
+// const connectMongo = require('./db/connection.js')
+const MongoStore = require('connect-mongo')
 require('./bot_admin.js')
 const passport = require('passport')
 const session = require('express-session')
@@ -64,7 +66,6 @@ passport.use(new SteamStrategy({
         apiKey: process.env.STEAM_API_KEY
     },
     function(identifier, profile, done) {
-        console.log(profile)
         profile.identifier = identifier;
         process.nextTick(function () {
             Subscriber.findOne({ id: profile.id }).then((subscriber) => {
@@ -94,7 +95,8 @@ app.use(session({
     secret: 'random apple eater',
     name: 'steam_id',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_CONNECTION })
 }));
 
 // Initialize Passport!  Also use passport.session() middleware, to support
