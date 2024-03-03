@@ -1,7 +1,7 @@
 const { Bot } = require('grammy')
 const {Subscriber} = require('./models/subscriber.js')
 
-const bot = new Bot(process.env.BOT_ADMIN || '1883716013:AAF6aaTD5CntA2t7IeL3VGfdBmpqQuSCYV8')
+const bot = new Bot(process.env.BOT_ADMIN)
 
 
 bot.command('start', async ctx => {
