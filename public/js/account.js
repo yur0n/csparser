@@ -34,35 +34,35 @@ closePopup.addEventListener("click", function() {
 	popup.style.display = "none";
 });
 
-submitButton.addEventListener("click", async () => {
-	const code = codeInput.value;
-	if (code) {
-		try {
-			accountStatus.style.color = 'lightblue'
-			accountStatus.textContent = 'Checking your code...'
-			const response = await fetch(`/account?code=${code}`);
-			const responseData = await response.json();
-			await new Promise(res => setTimeout(res, 1500)) // load imitation
-			if (responseData.error) {
-				accountStatus.style.color = 'HotPink'
-				accountStatus.textContent = responseData.error
-			} else {
-				document.cookie = `code=${code}; path=/`;
-				localStorage.setItem("code", code);
-				accountStatus.style.color = 'lightgreen'
-				accountStatus.textContent = responseData.message
-			}
-		} catch (e) {
-			console.log(e)
-			accountStatus.style.color = 'HotPink'
-			accountStatus.textContent = 'Server issues'
-		}
-		setTimeout(() => {
-			popup.style.display = "none"
-			accountStatus.style.color = ''
-			accountStatus.textContent = ''
-		}, 2500)
-	} else {
-		popup.style.display = "none"; // Hide the popup after submit
-	}
-});
+// submitButton.addEventListener("click", async () => {
+// 	const code = codeInput.value;
+// 	if (code) {
+// 		try {
+// 			accountStatus.style.color = 'lightblue'
+// 			accountStatus.textContent = 'Checking your code...'
+// 			const response = await fetch(`/account?code=${code}`);
+// 			const responseData = await response.json();
+// 			await new Promise(res => setTimeout(res, 1500)) // load imitation
+// 			if (responseData.error) {
+// 				accountStatus.style.color = 'HotPink'
+// 				accountStatus.textContent = responseData.error
+// 			} else {
+// 				document.cookie = `code=${code}; path=/`;
+// 				localStorage.setItem("code", code);
+// 				accountStatus.style.color = 'lightgreen'
+// 				accountStatus.textContent = responseData.message
+// 			}
+// 		} catch (e) {
+// 			console.log(e)
+// 			accountStatus.style.color = 'HotPink'
+// 			accountStatus.textContent = 'Server issues'
+// 		}
+// 		setTimeout(() => {
+// 			popup.style.display = "none"
+// 			accountStatus.style.color = ''
+// 			accountStatus.textContent = ''
+// 		}, 2500)
+// 	} else {
+// 		popup.style.display = "none"; // Hide the popup after submit
+// 	}
+// });

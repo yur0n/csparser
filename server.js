@@ -1,17 +1,19 @@
 const express = require('express');
+require('./db/connection.js')
+require('./bot_admin.js')
 const passport = require('passport')
 const session = require('express-session')
 const SteamStrategy = require('passport-steam');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// const users = require('./database');
+const {Subscriber} = require('./models/subscriber.js')
+const {User} = require('./models/user.js')
 const {csparser} = require('./csparser.js')
-const {getSteamId} = require('./getSteamId.js')
+const {getSteamId} = require('./getSteamId.js');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-let codes = ['838295', '95973', '615738', '519592', '287358'];
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -41,32 +43,49 @@ app.use((req, res, next) => {
 
 
 passport.serializeUser(function(user, done) {
-    done(null, user);
+    process.nextTick(() => {
+        done(null, { 
+            id: user.id, 
+            photo: user.photo, 
+            displayName: user.displayName
+         });
+    })
 });
   
-passport.deserializeUser(function(obj, done) {
-    done(null, obj);
+passport.deserializeUser(function(userObj, done) {
+    process.nextTick(() => {
+        done(null, userObj);
+    })
 });
-  
-  // Use the SteamStrategy within Passport.
-  //   Strategies in passport require a `validate` function, which accept
-  //   credentials (in this case, an OpenID identifier and profile), and invoke a
-  //   callback with a user object.
+
 passport.use(new SteamStrategy({
         returnURL: process.env.HOST? process.env.HOST + ':' + PORT + '/auth/steam/return' : 'http://localhost:8080/auth/steam/return',
         realm: process.env.HOST? process.env.HOST + ':' + PORT : 'http://localhost:8080/',
         apiKey: process.env.STEAM_API_KEY
     },
     function(identifier, profile, done) {
-        // asynchronous verification, for effect...
+        console.log(profile)
+        profile.identifier = identifier;
         process.nextTick(function () {
-        // To keep the example simple, the user's Steam profile is returned to
-        // represent the logged-in user.  In a typical application, you would want
-        // to associate the Steam account with a user record in your database,
-        // and return that user instead.
-            console.log(profile.id)
-            profile.identifier = identifier;
-            return done(null, profile);
+            Subscriber.findOne({ id: profile.id }).then((subscriber) => {
+                if (!subscriber) throw Error('Please, get a subscription first')
+                User.findOne({ id: subscriber.id }).then(user => {
+                    if (!user) {
+                        let newUser = new User({
+                            id: profile.id,
+                            photo: profile.photos[1].value,
+                            displayName: profile.displayName,
+                        })
+                        newUser.save().then(savedUser => {
+                            done(null, savedUser);
+                        })
+                        return
+                    }
+                    done(null, user);
+                })
+            }).catch(err => {
+                done(err, null);
+            })
         });
     }
 ));
@@ -82,10 +101,14 @@ app.use(session({
 // persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 app.use(express.static(__dirname + '/../../public'));
 
+
+
 app.get('/', function(req, res){
-  res.render('index', { user: req.user });
+    res.render('index', { user: req.user, message: req.query.message });
 });
 
 // app.get('/account', ensureAuthenticated, function(req, res){
@@ -116,27 +139,22 @@ app.get('/auth/steam',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/steam/return',
-  passport.authenticate('steam', { failureRedirect: '/' }),
-  function(req, res) {
-    res.redirect('/');
-});
+    passport.authenticate('steam', { failureRedirect: '/' }),
+    function(req, res) {
+        res.redirect('/');
+    }
+);
 
 
 app.get('/account', async (req, res) => {
-    //const code = res.locals.cookie.code;
-    const code = req.query.code;
-    try {
-        if (codes.includes(code)) { // code check logic should be here
-            // let steamId = await getSteamId()
-            // console.log(steamId)
-            res.json({ message: 'Access granted'})
-        } else {
-            res.json({ error: 'Wrong code' })
-        }
-    } catch (e) {
-        console.log(e)
-        res.status(500).json({ error: 'Server error' })
-    }
+    res.json({ allow: req.user?.id })
+
+    // try {
+    //     res.json({ message: 'Access granted'})
+    // } catch (e) {
+    //     console.log(e)
+    //     res.status(500).json({ error: 'Server error' })
+    // }
 })
 
 app.get('/min-price', ensureAuthenticated, async (req, res) => {
@@ -150,15 +168,27 @@ app.get('/min-price', ensureAuthenticated, async (req, res) => {
     }
 });
 
+app.use(function(err, req, res, next) {  /// error handler (handles only passport issues)
+    if (err) {
+        if (err.message == 'Please, get a subscription first') {
+            req.logout(() => res.redirect(`/?message=${err.message}`));
+            return
+        }
+        console.log(err)
+    } else {
+        next();
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`\nServer is running on port ${PORT}`, 
         `\nGo to http://localhost:8080/ in your browser`);
 })
 
 function ensureAuthenticated(req, res, next) {
-    // let coockieCode = codes.includes(res.locals.cookie.code)
-    let code = codes.includes(req.query.code)
-    if (req.isAuthenticated() && code) return next();
+    // let coockieCode = res.locals.cookie.code
+    if (req.isAuthenticated()) return next();
     res.json({ error: 'ACTIVATE SUBSCRIPTION' });
+    return
 }
   

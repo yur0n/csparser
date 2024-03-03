@@ -8,9 +8,6 @@ let functionCloseActive = false;
 let rangeInputsValue = document.querySelectorAll("#range-value");
 let scrollbarWidth;
 
-let stickerOverpay = 20
-let minProfit = 1
-
 popupSettingsButtonOpen.addEventListener("click", (e) => {
     e.preventDefault();
     body.classList.add("lock");
@@ -61,7 +58,10 @@ rangeInputsValue.forEach(rangeInputValue => {
     let inputValue = parent.querySelector("#input-value");
     let min = rangeInputValue.min;
     let max = rangeInputValue.max;
+    if (rangeInputValue.name == 'minProfit') rangeInputValue.value = localStorage.getItem('minProfit') || 1
+    if (rangeInputValue.name == 'stickerOverpay') rangeInputValue.value = localStorage.getItem('stickerOverpay') || 20
     inputValue.value = rangeInputValue.value;
+    console.log(inputValue.name)
     // rangeInputValue.addEventListener('change', function(event) {
     //     value = event.target.value
     //     console.log(value)
@@ -69,27 +69,27 @@ rangeInputsValue.forEach(rangeInputValue => {
     handleRangeInput(rangeInputValue);
     rangeInputValue.addEventListener('input', function (event) {
         if (event.target.name == 'stickerOverpay') {
-            stickerOverpay = event.target.value
+            localStorage.setItem('stickerOverpay', event.target.value)
         } else if (event.target.name == 'minProfit') {
-            minProfit = event.target.value
+            localStorage.setItem('minProfit', event.target.value)
         }
         inputValue.value = rangeInputValue.value;
         handleRangeInput(rangeInputValue);
     });
     inputValue.addEventListener('blur', function (event) {
         if (event.target.name == 'stickerOverpay') {
-            stickerOverpay = event.target.value
+            localStorage.setItem('stickerOverpay', event.target.value)
         } else if (event.target.name == 'minProfit') {
-            minProfit = event.target.value
+            localStorage.setItem('minProfit', event.target.value)
         }
         enteringValue(inputValue, rangeInputValue, min, max);
     });
     inputValue.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             if (event.target.name == 'stickerOverpay') {
-                stickerOverpay = event.target.value
+                localStorage.setItem('stickerOverpay', event.target.value)
             } else if (event.target.name == 'minProfit') {
-                minProfit = event.target.value
+                localStorage.setItem('minProfit', event.target.value)
             }
             enteringValue(inputValue, rangeInputValue, min, max);
         }

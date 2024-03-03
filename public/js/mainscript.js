@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const goodsId = '857550'
             const code = localStorage.getItem("code")
+            const minProfit = localStorage.getItem('minProfit')
+            const stickerOverpay = localStorage.getItem('stickerOverpay')
+
             const response = await fetch(`/min-price?code=${code}&goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}`);
             const responseData = await response.json();
 
@@ -62,19 +65,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Обработчик события клика на кнопку "Run"
-    runButton.addEventListener('click', function (e) {
-        
+    runButton.addEventListener('click', async (e) => {
         e.preventDefault();
-        let proceed = localStorage.getItem('code') && localStorage.getItem('steam_id')
-        if (!proceed) return
+        runButton.style.pointerEvents = 'none'
+        setTimeout(() => runButton.style.pointerEvents = '', 2000)
         if (runButton.classList.contains("_active")){
-            runButton.style.pointerEvents = 'none'
-            setTimeout(() => runButton.style.pointerEvents = '', 3000)
             isRunning = false;
             clearInterval(interval)
             runButton.querySelector("span").innerText = "Run";
             runButton.classList.remove("_active");
         } else {
+            if (!localStorage.getItem('steam_id')) return
+            let { allow } = await fetch('/account').then(res => res.json())
+            if (!allow) return
             if (!isRunning) {
                 isRunning = true;
                 fetchDataAndDisplay();
@@ -90,8 +93,3 @@ document.addEventListener('DOMContentLoaded', function () {
         windowText.innerText = '';
     });
 });
-
-// const code = localStorage.getItem("code")
-// if (!code) return
-// const allow = await fetch(`/account?code=${code}`).then(res => res.json())
-// if (allow?.message !== 'Access granted') return

@@ -42,10 +42,16 @@
             </a>
         </div>
         <button class="button_account">Enter code</button>
+        <% if (message) { %>
+            <div style="display: block"id="popupBtn">
+                <p style="color: antiquewhite;"><strong><%= message%></strong></p>
+                <button id="closeBtn">×</button>
+            </div>
+        <% } %>
         <% if (!user) { %>
             <button class="button_steam_account">Link Steam</button>
         <% } else { %>
-            <img src='<%= user.photos[1].value %>' alt='Your Avatar Image' />
+            <img src='<%= user.photo %>' alt='Your Avatar Image' />
             <button class="button_steam_account">Logout</button>
         <% } %>
         <div id="popupBtn">
