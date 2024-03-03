@@ -58,39 +58,22 @@ rangeInputsValue.forEach(rangeInputValue => {
     let inputValue = parent.querySelector("#input-value");
     let min = rangeInputValue.min;
     let max = rangeInputValue.max;
+
     if (rangeInputValue.name == 'minProfit') rangeInputValue.value = localStorage.getItem('minProfit') || 1
     if (rangeInputValue.name == 'stickerOverpay') rangeInputValue.value = localStorage.getItem('stickerOverpay') || 20
+
     inputValue.value = rangeInputValue.value;
-    console.log(inputValue.name)
-    // rangeInputValue.addEventListener('change', function(event) {
-    //     value = event.target.value
-    //     console.log(value)
-    // });
+
     handleRangeInput(rangeInputValue);
     rangeInputValue.addEventListener('input', function (event) {
-        if (event.target.name == 'stickerOverpay') {
-            localStorage.setItem('stickerOverpay', event.target.value)
-        } else if (event.target.name == 'minProfit') {
-            localStorage.setItem('minProfit', event.target.value)
-        }
         inputValue.value = rangeInputValue.value;
         handleRangeInput(rangeInputValue);
     });
     inputValue.addEventListener('blur', function (event) {
-        if (event.target.name == 'stickerOverpay') {
-            localStorage.setItem('stickerOverpay', event.target.value)
-        } else if (event.target.name == 'minProfit') {
-            localStorage.setItem('minProfit', event.target.value)
-        }
         enteringValue(inputValue, rangeInputValue, min, max);
     });
     inputValue.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            if (event.target.name == 'stickerOverpay') {
-                localStorage.setItem('stickerOverpay', event.target.value)
-            } else if (event.target.name == 'minProfit') {
-                localStorage.setItem('minProfit', event.target.value)
-            }
             enteringValue(inputValue, rangeInputValue, min, max);
         }
     });
@@ -128,7 +111,12 @@ function enteringValue(inputValue, rangeInputValue, min, max) {
 }
 
 function handleRangeInput(rangeInput) {
-    value = (rangeInput.value - rangeInput.min) / (rangeInput.max - rangeInput.min) * 100;
+    value = Math.round((rangeInput.value - rangeInput.min) / (rangeInput.max - rangeInput.min) * 100)
+    if (rangeInput.name == 'stickerOverpay') {
+        localStorage.setItem('stickerOverpay', value)
+    } else if (rangeInput.name == 'minProfit') {
+        localStorage.setItem('minProfit', value)
+    }
     rangeInput.style.background = 'linear-gradient(to right, #4554DF 0%, #4554DF ' + value + '%, #D9D9D9 ' + value + '%, #D9D9D9 100%)';
 };
 

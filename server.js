@@ -1,18 +1,15 @@
 const express = require('express');
 require('./db/connection.js')
-// const connectMongo = require('./db/connection.js')
 const MongoStore = require('connect-mongo')
-require('./bot_admin.js')
+// require('./bot_admin.js') // bot admin
 const passport = require('passport')
 const session = require('express-session')
 const SteamStrategy = require('passport-steam');
-const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const {Subscriber} = require('./models/subscriber.js')
 const {User} = require('./models/user.js')
 const {csparser} = require('./csparser.js')
-const {getSteamId} = require('./getSteamId.js');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -20,7 +17,6 @@ const PORT = process.env.PORT || 8080;
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
-
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
@@ -42,7 +38,6 @@ app.use((req, res, next) => {
     else res.locals.cookie = {};
     next();
 });
-
 
 passport.serializeUser(function(user, done) {
     process.nextTick(() => {
@@ -99,13 +94,9 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_CONNECTION })
 }));
 
-// Initialize Passport!  Also use passport.session() middleware, to support
-// persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-app.use(express.static(__dirname + '/../../public'));
 
 
 
@@ -124,22 +115,12 @@ app.get('/logout', function(req, res, next) {
     });
 });
 
-// GET /auth/steam
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Steam authentication will involve redirecting
-//   the user to steamcommunity.com.  After authenticating, Steam will redirect the
-//   user back to this application at /auth/steam/return
 app.get('/auth/steam',
   passport.authenticate('steam', { failureRedirect: '/' }),
   function(req, res) {
     res.redirect('/');
 });
 
-// GET /auth/steam/return
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
 app.get('/auth/steam/return',
     passport.authenticate('steam', { failureRedirect: '/' }),
     function(req, res) {
