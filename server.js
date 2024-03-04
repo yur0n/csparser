@@ -1,7 +1,7 @@
 const express = require('express');
 require('./db/connection.js')
 const MongoStore = require('connect-mongo')
-// require('./bot_admin.js') // bot admin
+require('./bot_admin.js') // bot admin
 const passport = require('passport')
 const session = require('express-session')
 const SteamStrategy = require('passport-steam');
