@@ -1,7 +1,7 @@
 const express = require('express');
 require('./db/connection.js')
 const MongoStore = require('connect-mongo')
-require('./bot_admin.js') // bot admin
+// require('./bot_admin.js') // bot admin
 const passport = require('passport')
 const session = require('express-session')
 const SteamStrategy = require('passport-steam');
@@ -102,6 +102,10 @@ app.use(passport.session());
 
 app.get('/', function(req, res){
     res.render('index', { user: req.user, message: req.query.message });
+});
+
+app.get('/coming-soon', function(req, res){
+    res.render('coming-soon');
 });
 
 // app.get('/account', ensureAuthenticated, function(req, res){
