@@ -41,27 +41,25 @@
                 Telegram
             </a>
         </div>
-        <button class="button_account">Enter code</button>
-        <% if (message) { %>
-            <div style="display: block"id="popupBtn">
-                <p style="color: antiquewhite;"><strong><%= message%></strong></p>
-                <button id="closeBtn">×</button>
-            </div>
-        <% } %>
+        <!-- <button class="button_account">Enter code</button> -->
+        <div style="display: none"id="popupBtn">
+            <p style="color: antiquewhite;"><strong></strong></p>
+            <button id="closeBtn">×</button>
+        </div>
         <% if (!user) { %>
-            <button class="button_steam_account">Link Steam</button>
+            <button class="button_account">Link Steam</button>
         <% } else { %>
             <img src='<%= user.photo %>' alt='Your Avatar Image' />
-            <button class="button_steam_account">Logout</button>
+            <button class="button_account">Logout</button>
         <% } %>
-        <div id="popupBtn">
+        <!-- <div id="popupBtn">
             <p style="color: antiquewhite;"><strong>Enter your code:</strong></p>
             <input class="button" type="text" id="codeInput">
             <button class="button" id="submitAccButton">Submit</button>
             <br>
             <p style="color: antiquewhite;"><strong>Status: </strong><span class="account_status"></span></p>
             <button id="closeBtn">×</button>
-        </div>
+        </div> -->
     </div>
 </header>
 

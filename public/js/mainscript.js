@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const popupBtn = document.getElementById("popupBtn");
     const windowText = document.querySelector('.window_text .text');
     const runButton = document.getElementById('button-run');
     const clearButton = document.getElementById('button-clear');
@@ -11,11 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
     async function fetchDataAndDisplay() {
         try {
             const goodsId = '857550'
-            const code = localStorage.getItem("code")
             const minProfit = localStorage.getItem('minProfit')
             const stickerOverpay = localStorage.getItem('stickerOverpay')
 
-            const response = await fetch(`/min-price?code=${code}&goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}`);
+            const response = await fetch(`/min-price?goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}`);
             const responseData = await response.json();
 
             console.log('Response Data:', responseData);
@@ -49,7 +49,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
             } else if (responseData?.error) {
-                windowText.innerText = responseData.error;
+                popupBtn.style.display = "block";
+                popupBtn.getElementsByTagName('p')[0].innerText = responseData.error
+                isRunning = false;
+                clearInterval(interval)
+                runButton.querySelector("span").innerText = "Run";
+                runButton.classList.remove("_active");
             } else {
                 windowText.innerText = 'No data available';
             }
@@ -75,9 +80,11 @@ document.addEventListener('DOMContentLoaded', function () {
             runButton.querySelector("span").innerText = "Run";
             runButton.classList.remove("_active");
         } else {
-            if (!localStorage.getItem('steam_id')) return
-            let { allow } = await fetch('/account').then(res => res.json())
-            if (!allow) return
+            if (!localStorage.getItem('steam_id')) {
+                popupBtn.style.display = "block";
+                popupBtn.getElementsByTagName('p')[0].innerText = 'Please, link your Steam account'
+                return
+            }
             if (!isRunning) {
                 isRunning = true;
                 fetchDataAndDisplay();

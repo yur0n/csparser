@@ -1,8 +1,8 @@
-const fs = require('fs');
-const fetch = require('node-fetch');
+import { readFileSync } from 'fs';
+import fetch from 'node-fetch';
 
 const pricesDict = {};
-const idsData = fs.readFileSync("ids", "utf-8");
+const idsData = readFileSync("src/utils/ids", "utf-8");
 idsData.split("\n").forEach((line) => {
     const parts = line.split(",");
     if (parts.length === 3) {
@@ -14,7 +14,7 @@ idsData.split("\n").forEach((line) => {
 });
 
 
-async function csparser(goodsId, minProfit, stickerOverpay) {
+export default async (goodsId, minProfit, stickerOverpay) => {
     const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&goods_id=${goodsId}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1`;
 
     try {
@@ -87,4 +87,3 @@ async function csparser(goodsId, minProfit, stickerOverpay) {
     }
 }
 
-module.exports = { csparser }

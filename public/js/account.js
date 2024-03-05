@@ -1,23 +1,11 @@
-const codeButton = document.querySelector('.button_account')
-const steamButton = document.querySelector('.button_steam_account')
-const popup = document.getElementById("popupBtn");
-const submitButton = document.getElementById("submitAccButton");
-const codeInput = document.getElementById("codeInput");
-const accountStatus = document.querySelector('.account_status')
+const steamButton = document.querySelector('.button_account')
 const closePopup = document.getElementById("closeBtn")
+const popup = document.getElementById("popupBtn");
+// const submitButton = document.getElementById("submitAccButton");
+// const codeInput = document.getElementById("codeInput");
+// const accountStatus = document.querySelector('.account_status')
 
-codeButton.addEventListener("click", () => {
-	popup.style.display = "block"; // Show the popup
-	codeInput.value = ""; // Clear previous input
-	let oldCode = localStorage.getItem('code')
-	if (oldCode) {
-		accountStatus.style.color = 'lightgreen'
-		accountStatus.textContent = 'Code provided'
-	} else { 
-		accountStatus.style.color = 'HotPink'
-		accountStatus.textContent = 'Code not provided'
-	}
-});
+
 
 steamButton.addEventListener('click', (e) => {
 	if (e.target.textContent == 'Link Steam') {
@@ -33,6 +21,19 @@ steamButton.addEventListener('click', (e) => {
 closePopup.addEventListener("click", function() {
 	popup.style.display = "none";
 });
+
+// codeButton.addEventListener("click", () => {
+// 	popup.style.display = "block"; // Show the popup
+// 	codeInput.value = ""; // Clear previous input
+// 	let oldCode = localStorage.getItem('code')
+// 	if (oldCode) {
+// 		accountStatus.style.color = 'lightgreen'
+// 		accountStatus.textContent = 'Code provided'
+// 	} else { 
+// 		accountStatus.style.color = 'HotPink'
+// 		accountStatus.textContent = 'Code not provided'
+// 	}
+// });
 
 // submitButton.addEventListener("click", async () => {
 // 	const code = codeInput.value;

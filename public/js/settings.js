@@ -20,8 +20,6 @@ popupSettingsButtonOpen.addEventListener("click", (e) => {
     }
 });
 
-
-
 function popupFotogalereyaClose() {
     functionCloseActive = true;
     popupSettingsButtonClose.addEventListener("click", () => {
