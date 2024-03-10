@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     windowText.appendChild(resultItem);
 
                     //  разделитель после каждого элемента, кроме последнего
-                    if (index !== responseData.data.length - 1) {
+                    if (index !== responseData.length - 1) {
                         const divider = document.createElement('hr');
                         windowText.appendChild(divider);
                     }
