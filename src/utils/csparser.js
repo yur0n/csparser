@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs';
 import fetch from 'node-fetch';
 
+const botToken = process.env.BOT_NOTIFIER;
+
 const pricesDict = {};
 const idsData = readFileSync("src/utils/ids", "utf-8");
 idsData.split("\n").forEach((line) => {
@@ -14,9 +16,8 @@ idsData.split("\n").forEach((line) => {
 });
 
 
-export default async (goodsId, minProfit, stickerOverpay) => {
+export default async (goodsId, minProfit, stickerOverpay, chatId) => {
     const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&goods_id=${goodsId}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1`;
-
     try {
         const response = await fetch(url, {
             headers: {
@@ -24,9 +25,10 @@ export default async (goodsId, minProfit, stickerOverpay) => {
             }
         });
         if (response.ok) {
-            const data = await response.json();
-            const items = data.data.items || [];
-            const name = data.data.goods_infos[goodsId].name || '';
+            const { data } = await response.json();
+            if (!data.items.length) return { message: 'Wrong Item ID'}
+            const items = data.items || [];
+            const name = data.goods_infos[goodsId].name || '';
             const result = [];
 
             let minPrice = 0;
@@ -43,7 +45,7 @@ export default async (goodsId, minProfit, stickerOverpay) => {
                 const contextid = item.asset_info.contextid;
                 const sell_order_id = item.id !== undefined ? item.id : 'N/A';
                 const link = `https://buff.163.com/goods/${goodsId}?appid=730&classid=${classid}&instanceid=${instanceid}&assetid=${assetid}&contextid=${contextid}&sell_order_id=${sell_order_id}`;
-                const inspect_mobileurl = item.asset_info.info.inspect_mobile_url ? item.asset_info.info.inspect_mobile_url : 'N/A';
+                const photo = item.asset_info.info?.inspect_mobile_url || item.img_src;
 
                 let totalStickerPrice = 0;
                 const processedStickers = [];
@@ -61,7 +63,8 @@ export default async (goodsId, minProfit, stickerOverpay) => {
 
                 const sticker_profit = totalStickerPrice / stickerOverpay;
                 // add minPrice algorithm later const profit = ((sticker_profit - (item.price - minPrice)) / item.price) * 100; 
-                const profit = ((sticker_profit - (item.price - item.price)) / item.price) * 100; 
+                let profit = (sticker_profit / item.price) * 100;
+                if (isNaN(profit) || !isFinite(profit)) profit = 0
                 const roundedProfit = profit.toFixed(2);
                 if (roundedProfit > minProfit) {
                     result.push({
@@ -70,7 +73,7 @@ export default async (goodsId, minProfit, stickerOverpay) => {
                         name,
                         stickers: processedStickers,
                         link,
-                        inspect_mobileurl,
+                        photo,
                         total_sticker_price: totalStickerPrice.toFixed(2),
                         roundedProfit
                     });

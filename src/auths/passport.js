@@ -4,7 +4,7 @@ import steamStrategy from './strategies/steamStrategy.js'
 passport.serializeUser((user, done) => {
     process.nextTick(() => {
         done(null, { 
-            id: user.id, 
+            id: user._id, 
             photo: user.photo, 
             displayName: user.displayName
         });

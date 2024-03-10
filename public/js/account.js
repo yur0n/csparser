@@ -9,11 +9,9 @@ const popup = document.getElementById("popupBtn");
 
 steamButton.addEventListener('click', (e) => {
 	if (e.target.textContent == 'Link Steam') {
-		localStorage.setItem('steam_id', true)
 		location.replace('/auth/steam')
 	}
 	if (e.target.textContent == 'Logout') {
-		localStorage.removeItem('steam_id')
 		location.replace('/logout')
 	}
 })

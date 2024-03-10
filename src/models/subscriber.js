@@ -1,10 +1,9 @@
 import { Schema, model } from 'mongoose'
 
 const schema = new Schema({
-    id: { 
-		type: String, 
-		required: true, 
-		unique: true 
+    _id: { 
+		type: String,
+		ref: 'User' 
 	},
 	expirationDate: {
 		type: Date,

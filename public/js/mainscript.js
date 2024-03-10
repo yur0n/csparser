@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const windowText = document.querySelector('.window_text .text');
     const runButton = document.getElementById('button-run');
     const clearButton = document.getElementById('button-clear');
+    const goodsIdInput = document.getElementById('goodsId');
     const offButton = document.querySelector('.header_button:nth-last-child(2)');
 
     let isRunning = false;
@@ -11,19 +12,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Функция для запроса данных и вывода
     async function fetchDataAndDisplay() {
         try {
-            const goodsId = '857550'
+            const goodsId = localStorage.getItem('goodsId')
+            const chatId = localStorage.getItem('chatId')
             const minProfit = localStorage.getItem('minProfit')
             const stickerOverpay = localStorage.getItem('stickerOverpay')
 
-            const response = await fetch(`/min-price?goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}`);
+            const response = await fetch(`/min-price?goodsId=${goodsId}&minProfit=${minProfit}&stickerOverpay=${stickerOverpay}&chatId=${chatId}`);
             const responseData = await response.json();
 
             console.log('Response Data:', responseData);
 
-            if (responseData && responseData.data && Array.isArray(responseData.data) && responseData.data.length > 0) {
+            if (responseData?.length) {
 
                 windowText.innerHTML = '';
-                responseData.data.forEach((item, index) => {
+                responseData.forEach((item, index) => {
                     const resultItem = document.createElement('div');
                     const stickerList = item.stickers.map(sticker => {
                         console.log('Sticker:', sticker); // Отладочный вывод для каждого стикера
@@ -33,13 +35,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     resultItem.innerHTML = `
                     <h2>New item was found</h2>
                     <p>Name: ${item.name}</p>
-                    <p>Default Price: ${item.defaultPrice}</p>
+                    <p>Default Price: ¥${item.defaultPrice}</p>
                     <p>Stickers:</p>
                     <ul>${stickerList}</ul>
                     <p>Total Sticker Price: ¥${item.total_sticker_price}</p>
                     <p>Profit: ${item.roundedProfit}%</p>
                     <a href="${item.link}" target="_blank"><p>click to buy</p></a> 
-                `;
+                    `;
                     windowText.appendChild(resultItem);
 
                     //  разделитель после каждого элемента, кроме последнего
@@ -55,6 +57,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearInterval(interval)
                 runButton.querySelector("span").innerText = "Run";
                 runButton.classList.remove("_active");
+            } else if (responseData?.message){
+                windowText.innerText = responseData.message;
             } else {
                 windowText.innerText = 'No data available';
             }
@@ -69,6 +73,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    goodsIdInput.addEventListener('input', (e) => {
+        localStorage.setItem('goodsId', e.target.value)
+    })
+
     // Обработчик события клика на кнопку "Run"
     runButton.addEventListener('click', async (e) => {
         e.preventDefault();
@@ -80,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
             runButton.querySelector("span").innerText = "Run";
             runButton.classList.remove("_active");
         } else {
-            if (!localStorage.getItem('steam_id')) {
+            if (!document.cookie.includes('loggedin=1')) {
                 popupBtn.style.display = "block";
                 popupBtn.getElementsByTagName('p')[0].innerText = 'Please, link your Steam account'
                 return

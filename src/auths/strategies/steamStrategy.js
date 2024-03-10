@@ -13,23 +13,20 @@ const steamStrategyOptions = {
 export default new SteamStrategy(steamStrategyOptions,
     function(identifier, profile, done) {
         profile.identifier = identifier;
-        process.nextTick(function () {
-            User.findOne({ id: profile.id })
-            .then(user => {
-                if (!user) {
-                    let newUser = new User({
-                        id: profile.id,
+        process.nextTick(async () => {
+            try {
+                let user = await User.findByIdAndUpdate(profile.id,
+                    {
+                        _id: profile.id,
                         photo: profile.photos[1].value,
                         displayName: profile.displayName,
-                    })
-                    newUser.save().then(savedUser => {
-                        done(null, savedUser);
-                    })
-                    return
-                }
+                    },
+                    { new: true, upsert: true}
+                )
                 done(null, user);
-            })
-            .catch(err => done(err, null));
+            } catch (error) {             
+                done(error, null);
+            }
         })
     }
 )

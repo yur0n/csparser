@@ -8,6 +8,13 @@ let functionCloseActive = false;
 let rangeInputsValue = document.querySelectorAll("#range-value");
 let scrollbarWidth;
 
+let tgChatId = document.querySelector('input[name="tg_chat_id"]')
+tgChatId.value = localStorage.getItem('chatId') || '0'
+tgChatId.addEventListener('change', (e) => {
+    localStorage.setItem('chatId', e.target.value)
+}) 
+
+
 popupSettingsButtonOpen.addEventListener("click", (e) => {
     e.preventDefault();
     body.classList.add("lock");

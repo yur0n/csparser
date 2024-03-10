@@ -1,9 +1,19 @@
 import { Schema, model } from 'mongoose'
 
 const schema = new Schema({
-    id: { type: String, required: true, unique: true },
-	photo: { type: String },
-	displayName: { type: String }
+    _id: { 
+		type: String, 
+		ref: 'Subscriber'
+	},
+	photo: { 
+		type: String 
+	},
+	displayName: { 
+		type: String 
+	},
+	cookies: { 
+		type: [Object]
+	}
 })
 
 export default model('User', schema) 

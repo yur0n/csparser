@@ -2,12 +2,14 @@ import express from 'express';
 import './db/connection.js';
 import MongoStore from 'connect-mongo'; // session store for passport
 import './bots/bot_admin.js'; // bot admin
+import sendToBot from './bots/bot_notifier.js'; // bot notifier
 import passport from 'passport';
 import session from 'express-session';
 import cors from 'cors';
 import { join } from 'path';
 
 import Subscriber from './models/subscriber.js';
+import User from './models/user.js';
 
 import csparser from './utils/csparser.js';
 import authSteam from './routes/authSteam.js';
@@ -20,24 +22,24 @@ app.use(express.static(join(import.meta.dirname, '../public')));
 app.set('views', join(import.meta.dirname, '../views'));
 app.set('view engine', 'ejs');
 
-// CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     next();
 });
+
 // read cookie
-app.use((req, res, next) => {
-    const { headers: { cookie } } = req;
-    if (cookie) {
-        const values = cookie.split(';').reduce((res, item) => {
-            const data = item.trim().split('=');
-            return { ...res, [data[0]]: data[1] };
-        }, {});
-        res.locals.cookie = values;
-    }
-    else res.locals.cookie = {};
-    next();
-});
+// app.use((req, res, next) => {
+//     const { headers: { cookie } } = req;
+//     if (cookie) {
+//         const values = cookie.split(';').reduce((res, item) => {
+//             const data = item.trim().split('=');
+//             return { ...res, [data[0]]: data[1] };
+//         }, {});
+//         res.locals.cookie = values;
+//     }
+//     else res.locals.cookie = {};
+//     next();
+// });
 
 app.use(session({
     secret: 'random apple eater',
@@ -50,34 +52,55 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//routes
 app.use('/auth/steam', authSteam);
 
-
 app.get('/', (req, res) => {
-    res.render('index', { user: req.user, message: req.query.message });
+    res.render('index', { user: req.user});
 });
 
 app.get('/coming-soon', (req, res) => {
     res.render('coming-soon');
 });
 
+app.post('/cookies', (req, res) => {
+    if (req.body[0].domain !== 'buff.163.com') return res.send({ status: 'Wrong domain' })
+    User.findByIdAndUpdate(req.user.id, { cookies: req.body }).exec()
+    .then((user) => user? res.send({ status: 'Cookies added' }) : res.send({ status: 'User not found' }))
+    .catch(e => {
+        console.log(e)
+        res.send({ status: 'Server error' })
+    })
+})
+
 app.get('/allsubs', async (req, res) => {
     if (req.query.token !== 'ht2a33B4EQ4226dpH') {
         res.redirect('/')
         return
     }
-    let subs = await Subscriber.find().exec().catch(console.log);
-    subs = subs.map(sub => {
-        return {
-            steamID: sub.id,
-            expires: getHumanDate(sub.expirationDate),
-            createdAt: getHumanDate(sub.createdAt)
-        }
-    })
-    res.send(subs);
+    try {
+        let subs = await Subscriber.find().populate('_id').exec()
+        subs = subs.map(sub => {
+            return {
+                user: {
+                    id: sub._id._id,
+                    photo: sub._id.photo,
+                    name: sub._id.displayName,
+                    cookies: sub._id.cookies?.length ? true : false
+                },
+                expires: getHumanDate(sub.expirationDate),
+                createdAt: getHumanDate(sub.createdAt)
+            }
+        })
+        res.send(subs);
+    } catch (error) {
+        console.log(error)
+        res.send({error: 'Server error'})
+    }
 })
 
 app.get('/logout', function(req, res, next) {
+    res.clearCookie('loggedin')
     req.logout((err) => {
         if (err) { return next(err); }
         res.redirect('/');
@@ -85,17 +108,20 @@ app.get('/logout', function(req, res, next) {
 });
 
 app.get('/min-price', ensureAuthenticated, async (req, res) => {
-    const { goodsId, minProfit, stickerOverpay } = req.query;
-    if (!goodsId) return res.status(500).json({ error: 'Please, provide goods ID' })
-    const data = await csparser(goodsId, minProfit, stickerOverpay);
+    const { goodsId, minProfit, stickerOverpay, chatId } = req.query;
+    if (!+goodsId) return res.json({ error: 'Please, provide Item ID' })
+    const data = await csparser(goodsId, minProfit, stickerOverpay, chatId);
     if (data) {
-        res.json({ data });
+        if (chatId && data.length) {
+            sendToBot(data, chatId);
+        }
+        res.json(data);
     } else {
         res.status(500).json({ error: 'Failed to fetch data' });
     }
 });
 
-app.use((err, req, res, next) => {  /// error handler (handles only passport issues)
+app.use((err, req, res, next) => {  // error handler
     if (err) {
         console.log(err)
     } else {
@@ -106,7 +132,7 @@ app.use((err, req, res, next) => {  /// error handler (handles only passport iss
 async function ensureAuthenticated(req, res, next) {
     // let coockieCode = res.locals.cookie.code
     if (req.isAuthenticated()) {
-        let sub = await Subscriber.findOne({ id: req.user.id }).exec()
+        let sub = await Subscriber.findById(req.user.id).exec()
             .catch(e => {
                 console.log(e);
                 return res.json({ error: 'Server error'})

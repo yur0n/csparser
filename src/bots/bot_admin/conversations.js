@@ -30,11 +30,11 @@ export async function addSub(conversation, ctx) {
 			replyAndDel(ctx, `⚠️ Неверное значение`)
 			return
 		}
-		let subscriber = await Subscriber.findOne({ id })
+		let subscriber = await Subscriber.findById(id)
 		if (subscriber) {
 			replyAndDel(ctx, `ℹ️ Подписчик ${id} уже был добавлен`)
 		} else {
-			let subscriber = new Subscriber({ id, expirationDate: setSubTime(ttl) })
+			let subscriber = new Subscriber({ _id: id, expirationDate: setSubTime(ttl) })
 			await subscriber.save()
 			replyAndDel(ctx, `✅ Подписчик добавлен`) 
 		}
@@ -57,7 +57,7 @@ export async function deleteSub(conversation, ctx) {
 			replyAndDel(ctx, `⚠️ Неверное значение SteamID`)
 			return
 		}
-		let subscriber = await Subscriber.findOne({ id })
+		let subscriber = await Subscriber.findById(id)
 		if (subscriber) {
 			await subscriber.deleteOne()
 			replyAndDel(ctx, `✅ Подписчик ${id} удален`)
@@ -83,7 +83,7 @@ export async function updateSub(conversation, ctx) {
 			replyAndDel(ctx, `⚠️ Неверное значение SteamID`)
 			return
 		}
-		let subscriber = await Subscriber.findOne({ id })
+		let subscriber = await Subscriber.findById(id)
 		if (subscriber) {
 			let ask2 = await ctx.reply('⌨️ Введите новое количество дней подписки');
 			ctx = await conversation.wait();
