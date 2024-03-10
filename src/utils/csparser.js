@@ -26,7 +26,7 @@ export default async (goodsId, minProfit, stickerOverpay, chatId) => {
         });
         if (response.ok) {
             const { data } = await response.json();
-            if (!data.items.length) return { message: 'Wrong Item ID'}
+            if (!data?.items.length) return { message: 'Wrong Item ID'}
             const items = data.items || [];
             const name = data.goods_infos[goodsId].name || '';
             const result = [];
