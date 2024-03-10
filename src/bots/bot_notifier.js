@@ -16,8 +16,8 @@ bot.on('message', async (ctx) => {
             await ctx.reply('У вас отсутствует подписка на сервис, для продолжения работы приобретите подписку')
             return
         }
-        await ctx.reply('SteamID принят.\n\nBаш ChatID: ' + ctx.message.chat.id + '\nBаш username: ' + ctx.from.username)
-        await ctx.reply('Для включения уведомлений введите ChatID или @username на сайте\n\nДля отключения уведомлений просто очистите поле ChatID')
+        await ctx.reply('SteamID принят.\n\nBаш ChatID: ' + ctx.message.chat.id)
+        await ctx.reply('Для включения уведомлений введите ChatID на сайте\n\nДля отключения уведомлений просто очистите поле ChatID')
     } else {
         await ctx.reply('Не верный SteamID')
     }
