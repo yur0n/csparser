@@ -16,7 +16,7 @@ idsData.split("\n").forEach((line) => {
 });
 
 
-export default async (goodsId, minProfit, stickerOverpay, chatId) => {
+export default async (goodsId, minProfit, stickerOverpay) => {
     const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&goods_id=${goodsId}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1`;
     try {
         const response = await fetch(url, {
@@ -26,7 +26,7 @@ export default async (goodsId, minProfit, stickerOverpay, chatId) => {
         });
         if (response.ok) {
             const { data } = await response.json();
-            if (!data?.items.length) return { message: 'Wrong Item ID'}
+            if (!data?.items.length) return { error: 'Wrong Item ID'}
             const items = data.items || [];
             const name = data.goods_infos[goodsId].name || '';
             const result = [];

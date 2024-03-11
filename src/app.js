@@ -53,7 +53,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //routes
-app.use('/auth/steam', authSteam);
+app.use('/auth', authSteam);
 
 app.get('/', (req, res) => {
     res.render('index', { user: req.user});
@@ -100,7 +100,7 @@ app.get('/allsubs', async (req, res) => {
 })
 
 app.get('/logout', function(req, res, next) {
-    res.clearCookie('loggedin')
+    res.clearCookie('steam')
     req.logout((err) => {
         if (err) { return next(err); }
         res.redirect('/');
@@ -109,15 +109,15 @@ app.get('/logout', function(req, res, next) {
 
 app.get('/min-price', ensureAuthenticated, async (req, res) => {
     const { goodsId, minProfit, stickerOverpay, chatId } = req.query;
-    if (!+goodsId) return res.json({ error: 'Please, provide Item ID' })
-    const data = await csparser(goodsId, minProfit, stickerOverpay, chatId);
+    if (!+goodsId) return res.send({ error: 'Please, provide Item ID' })
+    const data = await csparser(goodsId, minProfit, stickerOverpay);
     if (data) {
         if (chatId && data.length) {
             sendToBot(data, chatId);
         }
-        res.json(data);
+        res.send(data);
     } else {
-        res.status(500).json({ error: 'Failed to fetch data' });
+        res.status(500).send({ error: 'Failed to fetch data' });
     }
 });
 
@@ -135,12 +135,12 @@ async function ensureAuthenticated(req, res, next) {
         let sub = await Subscriber.findById(req.user.id).exec()
             .catch(e => {
                 console.log(e);
-                return res.json({ error: 'Server error'})
+                return res.send({ error: 'Server error'})
             });
-        if (!sub) return res.json({ error: 'Please, get a subscription' });
+        if (!sub) return res.send({ error: 'Please, get a subscription' });
         return next();
     } else {
-        res.json({ error: 'Please, link your Steam account' });
+        res.send({ error: 'Please, link your Steam account' });
         return
     }
 }

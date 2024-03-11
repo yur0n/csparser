@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
             windowText.innerText = 'Failed to fetch data';
         }
 
-
         if (isRunning) {
             interval = setTimeout(fetchDataAndDisplay, 6000);
         }
@@ -88,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
             runButton.querySelector("span").innerText = "Run";
             runButton.classList.remove("_active");
         } else {
-            if (!document.cookie.includes('loggedin=1')) {
+            if (!document.cookie.includes('steam=true')) {
                 popupBtn.style.display = "block";
                 popupBtn.getElementsByTagName('p')[0].innerText = 'Please, link your Steam account'
                 return
