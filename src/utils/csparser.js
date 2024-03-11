@@ -66,7 +66,7 @@ export default async (goodsId, minProfit, stickerOverpay) => {
                 let profit = (sticker_profit / item.price) * 100;
                 if (isNaN(profit) || !isFinite(profit)) profit = 0
                 const roundedProfit = profit.toFixed(2);
-                if (roundedProfit > minProfit) {
+                if (roundedProfit > +minProfit) {
                     result.push({
                         goodsId,
                         defaultPrice: item.price,
