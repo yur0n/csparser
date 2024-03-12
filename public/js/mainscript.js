@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             } else if (responseData?.error) {
                 popupBtn.style.display = "block";
-                popupBtn.getElementsByTagName('p')[0].innerText = responseData.error
+                popupBtn.getElementsByTagName('p')[0].innerText = responseData.error + ' ' + (responseData.url || '')
                 isRunning = false;
                 clearInterval(interval)
                 runButton.querySelector("span").innerText = "Run";

@@ -24,7 +24,7 @@ async function getData(url, cookie, attempt = 0) {
 	if (response.ok) {
 		let res = await response.json()
 		if (res.code == 'Captcha Validate Required') {
-			return { error: res.code + ': ' + res.confirm_entry.entry.url }
+			return { error: res.code, url: res.confirm_entry.entry.url }
 		}
 		if (res.code == 'Login Required') {
 			await new Promise(resolve => setTimeout(resolve, 3000));
