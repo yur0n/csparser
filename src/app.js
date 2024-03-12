@@ -12,6 +12,7 @@ import Subscriber from './models/subscriber.js';
 import User from './models/user.js';
 
 import csparser from './utils/csparser.js';
+import csparser2 from './utils/csparser2.js';
 import authSteam from './routes/authSteam.js';
 
 const app = express();
@@ -63,10 +64,10 @@ app.get('/coming-soon', (req, res) => {
     res.render('coming-soon');
 });
 
-app.post('/cookies', (req, res) => {
-    if (req.body[0].domain !== 'buff.163.com') return res.send({ status: 'Wrong domain' })
-    User.findByIdAndUpdate(req.user.id, { cookies: req.body }).exec()
-    .then((user) => user? res.send({ status: 'Cookies added' }) : res.send({ status: 'User not found' }))
+app.post('/cookie', (req, res) => {
+    if (!req.body.cookie) return res.send({ status: 'No cookie provided' })
+    User.findByIdAndUpdate(req.user.id, { cookie: req.body.cookie }).exec()
+    .then((user) => user? res.send({ status: 'Cookie added' }) : res.send({ status: 'User not found' }))
     .catch(e => {
         console.log(e)
         res.send({ status: 'Server error' })
@@ -79,14 +80,14 @@ app.get('/allsubs', async (req, res) => {
         return
     }
     try {
-        let subs = await Subscriber.find().populate('_id').exec()
-        subs = subs.map(sub => {
+        let subscribers = await Subscriber.find().populate('_id').exec()
+        subs = subscribers.map(sub => {
             return {
                 user: {
                     id: sub._id._id,
                     photo: sub._id.photo,
                     name: sub._id.displayName,
-                    cookies: sub._id.cookies?.length ? true : false
+                    cookie: sub._id.cookie?.length && true
                 },
                 expires: getHumanDate(sub.expirationDate),
                 createdAt: getHumanDate(sub.createdAt)
@@ -110,15 +111,9 @@ app.get('/logout', function(req, res, next) {
 app.get('/min-price', ensureAuthenticated, async (req, res) => {
     const { goodsId, minProfit, stickerOverpay, chatId } = req.query;
     if (!+goodsId) return res.send({ error: 'Please, provide Item ID' })
-    const data = await csparser(goodsId, minProfit, stickerOverpay);
-    if (data) {
-        if (chatId && data.length) {
-            sendToBot(data, chatId);
-        }
-        res.send(data);
-    } else {
-        res.status(500).send({ error: 'Failed to fetch data' });
-    }
+    const data = await csparser2(goodsId, minProfit, stickerOverpay, req.user.id);
+    res.send(data);
+    if (chatId && data.length) sendToBot(data, chatId);
 });
 
 app.use((err, req, res, next) => {  // error handler

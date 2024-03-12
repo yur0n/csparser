@@ -11,8 +11,8 @@ const schema = new Schema({
 	displayName: { 
 		type: String 
 	},
-	cookies: { 
-		type: [Object]
+	cookie: { 
+		type: String
 	}
 })
 

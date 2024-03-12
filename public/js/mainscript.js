@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (isRunning) {
-            interval = setTimeout(fetchDataAndDisplay, 6000);
+            interval = setTimeout(fetchDataAndDisplay, 12_000);
         }
     }
 

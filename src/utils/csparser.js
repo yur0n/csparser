@@ -1,7 +1,4 @@
 import { readFileSync } from 'fs';
-import fetch from 'node-fetch';
-
-const botToken = process.env.BOT_NOTIFIER;
 
 const pricesDict = {};
 const idsData = readFileSync("src/utils/ids", "utf-8");
