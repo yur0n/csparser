@@ -23,6 +23,7 @@ async function getData(url, cookie, attempt = 0) {
 	})
 	if (response.ok) {
 		let res = await response.json()
+		if (res.code !== 'OK') console.log(res)
 		if (res.code == 'Captcha Validate Required') {
 			return { error: res.code, url: res.confirm_entry.entry.url }
 		}
@@ -30,8 +31,6 @@ async function getData(url, cookie, attempt = 0) {
 			await new Promise(resolve => setTimeout(resolve, 3000));
 			return await getData(url, cookie, attempt + 1)
 		} else {
-			console.log(res)
-			console.log(res.data?.items?.length)
 			if (!res.data?.items?.length) return { error: 'Wrong Item ID'}
 			return res.data
 		}
