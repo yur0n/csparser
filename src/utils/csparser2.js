@@ -27,6 +27,7 @@ async function getData(url, cookie, attempt = 0) {
 			await new Promise(resolve => setTimeout(resolve, 3000));
 			return await getData(url, cookie, attempt + 1)
 		} else {
+			console.log(res)
 			console.log(res.data?.items?.length)
 			if (!res.data?.items?.length) return { error: 'Wrong Item ID'}
 			return res.data
