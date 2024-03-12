@@ -14,7 +14,7 @@ idsData.split("\n").forEach((line) => {
 });
 
 async function getData(url, cookie, attempt = 0) { 
-	if (attempt >= 2) return { error: 'Buff163 Login Required error' }
+	if (attempt >= 2) return { error: 'Buff163 Login Required' }
 	const response = await fetch(url, {
 		headers: { 
 			'Accept-Language': 'en',
@@ -23,6 +23,9 @@ async function getData(url, cookie, attempt = 0) {
 	})
 	if (response.ok) {
 		let res = await response.json()
+		if (res.code == 'Captcha Validate Required') {
+			return { error: res.code + ': ' + res.confirm_entry.entry.url }
+		}
 		if (res.code == 'Login Required') {
 			await new Promise(resolve => setTimeout(resolve, 3000));
 			return await getData(url, cookie, attempt + 1)
