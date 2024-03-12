@@ -1,7 +1,4 @@
 import { readFileSync } from 'fs';
-import fetch from 'node-fetch';
-
-const botToken = process.env.BOT_NOTIFIER;
 
 const pricesDict = {};
 const idsData = readFileSync("src/utils/ids", "utf-8");
@@ -33,8 +30,7 @@ export default async (goodsId, minProfit, stickerOverpay) => {
 
             let minPrice = 0;
             if (items.length >= 4) {
-                const fourthItem = items[3];
-                minPrice = parseFloat(fourthItem.price);
+                minPrice = parseFloat(items[3].price);
             }
 
             for (const item of items) {
@@ -61,7 +57,7 @@ export default async (goodsId, minProfit, stickerOverpay) => {
                     }
                 }
 
-                const sticker_profit = totalStickerPrice / stickerOverpay;
+                const sticker_profit = totalStickerPrice / +stickerOverpay;
                 // add minPrice algorithm later const profit = ((sticker_profit - (item.price - minPrice)) / item.price) * 100; 
                 let profit = (sticker_profit / item.price) * 100;
                 if (isNaN(profit) || !isFinite(profit)) profit = 0

@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Функция для запроса данных и вывода
     async function fetchDataAndDisplay() {
         try {
+            window.postMessage({
+                direction: "from-page-script",
+                message: "Message from the page",
+            },"*");
             const goodsId = localStorage.getItem('goodsId')
             const chatId = localStorage.getItem('chatId')
             const minProfit = localStorage.getItem('minProfit')

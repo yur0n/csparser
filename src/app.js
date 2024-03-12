@@ -7,12 +7,15 @@ import passport from 'passport';
 import session from 'express-session';
 import cors from 'cors';
 import { join } from 'path';
+import authSteam from './routes/authSteam.js';
 
 import Subscriber from './models/subscriber.js';
 import User from './models/user.js';
 
+import csparser2 from './utils/csparser2.js';
 import csparser from './utils/csparser.js';
-import authSteam from './routes/authSteam.js';
+import priceCheck from './utils/priceCheck.js';
+
 
 const app = express();
 
@@ -28,18 +31,18 @@ app.use((req, res, next) => {
 });
 
 // read cookie
-// app.use((req, res, next) => {
-//     const { headers: { cookie } } = req;
-//     if (cookie) {
-//         const values = cookie.split(';').reduce((res, item) => {
-//             const data = item.trim().split('=');
-//             return { ...res, [data[0]]: data[1] };
-//         }, {});
-//         res.locals.cookie = values;
-//     }
-//     else res.locals.cookie = {};
-//     next();
-// });
+app.use((req, res, next) => {
+    const { headers: { cookie } } = req;
+    if (cookie) {
+        const values = cookie.split(';').reduce((res, item) => {
+            const data = item.trim().split('=');
+            return { ...res, [data[0]]: data[1] };
+        }, {});
+        res.locals.cookie = values;
+    }
+    else res.locals.cookie = {};
+    next();
+});
 
 app.use(session({
     secret: 'random apple eater',
@@ -58,13 +61,18 @@ app.use('/auth', authSteam);
 app.get('/', (req, res) => {
     res.render('index', { user: req.user});
 });
-
+app.get('/check', (req, res) => {
+   console.log(req.headers.cookie)
+   console.log(res.locals.cookie)
+   res.send('ok')
+});
 app.get('/coming-soon', (req, res) => {
     res.render('coming-soon');
+    priceCheck()
 });
 
 app.post('/cookies', (req, res) => {
-    if (req.body[0].domain !== 'buff.163.com') return res.send({ status: 'Wrong domain' })
+    if (!req.body[0].domain.includes('.163.com')) return res.send({ status: 'Wrong domain' })
     User.findByIdAndUpdate(req.user.id, { cookies: req.body }).exec()
     .then((user) => user? res.send({ status: 'Cookies added' }) : res.send({ status: 'User not found' }))
     .catch(e => {
@@ -107,18 +115,35 @@ app.get('/logout', function(req, res, next) {
     });
 });
 
+let store = {}
+app.post('/parse', ensureAuthenticated, async (req, res) => {
+    let data = req.body?.data
+    if (data.error) return store[req.user.id] = data
+    let result = await csparser2(req.body)
+    store[req.user.id] = result
+    res.send('ok')
+})
+
 app.get('/min-price', ensureAuthenticated, async (req, res) => {
     const { goodsId, minProfit, stickerOverpay, chatId } = req.query;
     if (!+goodsId) return res.send({ error: 'Please, provide Item ID' })
-    const data = await csparser(goodsId, minProfit, stickerOverpay);
-    if (data) {
-        if (chatId && data.length) {
-            sendToBot(data, chatId);
-        }
-        res.send(data);
-    } else {
-        res.status(500).send({ error: 'Failed to fetch data' });
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    let data = store[req.user.id]
+    if (!data) res.send({ data: [] })
+    res.send(data)
+    delete store[req.user.id]
+    if (data?.length && chatId) {
+        sendToBot(data, chatId);
     }
+    // const data = await csparser(goodsId, minProfit, stickerOverpay);
+    // if (data) {
+    //     if (chatId && data.length) {
+    //         sendToBot(data, chatId);
+    //     }
+    //     res.send(data);
+    // } else {
+    //     res.status(500).send({ error: 'Failed to fetch data' });
+    // }
 });
 
 app.use((err, req, res, next) => {  // error handler
@@ -158,3 +183,6 @@ function getHumanDate(isoString) {
 }
 
 export default app
+
+
+

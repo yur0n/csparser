@@ -28,6 +28,7 @@ bot.start()
 export default async (data, chatId) => {
     let can_send_to_bot = true
     for (let i = 0; i < 2; i++) { // \nDefault price: ${minPrice}¥
+        if (!data[i]?.name) return
         let message = `
             \n▄︻デ══━一 ${data[i].name}
             \nItem price: ¥${data[i].defaultPrice}
