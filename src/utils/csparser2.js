@@ -23,7 +23,7 @@ async function getData(url, cookie, attempt = 0) {
 	})
 	if (response.ok) {
 		let res = await response.json()
-		if (res.code !== 'OK') console.log(new Date().toISOString() + ': ' + res)
+		if (res.code !== 'OK') console.log(new Date().toISOString() + ': ', res)
 		if (res.code == 'Captcha Validate Required') {
 			return { error: res.code, url: res.confirm_entry.entry.url }
 		}
