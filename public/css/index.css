@@ -205,6 +205,12 @@ main .block_info .block_info__window .window_text p{
     font-size: 17px;
     margin: 0 0 15px;
 }
+main .block_info .block_info__window .window_text li{
+    color: white;
+    font-family: "Poppins Medium";
+    font-size: 13px;
+}
+
 
 main .block_info .block_info__window .window_text p:last-child{
     margin: 0;
