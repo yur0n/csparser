@@ -81,7 +81,7 @@ app.get('/allsubs', async (req, res) => {
     }
     try {
         let subscribers = await Subscriber.find().populate('_id').exec()
-        subs = subscribers.map(sub => {
+        let subs = subscribers.map(sub => {
             return {
                 user: {
                     id: sub._id._id,
