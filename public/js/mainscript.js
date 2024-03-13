@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             } else if (responseData?.error) {
                 popupBtn.style.display = "block";
-                popupBtn.getElementsByTagName('p')[0].innerText = responseData.error + ' ' + (responseData.url || '')
+                popupBtn.getElementsByTagName('p')[0].innerText = `${responseData.error}: ${(responseData.url || '')}` // `<a href='${(responseData.url || '')}'>${responseData.error}</a>`
                 isRunning = false;
                 clearInterval(interval)
                 runButton.querySelector("span").innerText = "Run";
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (isRunning) {
-            interval = setTimeout(fetchDataAndDisplay, 12_000);
+            interval = setTimeout(fetchDataAndDisplay, 5_000);
         }
     }
 

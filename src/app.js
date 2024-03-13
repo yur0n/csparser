@@ -64,7 +64,7 @@ app.get('/coming-soon', (req, res) => {
     res.render('coming-soon');
 });
 
-app.post('/cookie', (req, res) => {
+app.post('/cookie', ensureAuthenticated, (req, res) => {
     if (!req.body.cookie) return res.send({ status: 'No cookie provided' })
     User.findByIdAndUpdate(req.user.id, { cookie: req.body.cookie }).exec()
     .then((user) => user? res.send({ status: 'Cookie added' }) : res.send({ status: 'User not found' }))
@@ -108,7 +108,7 @@ app.get('/logout', function(req, res, next) {
     });
 });
 
-app.get('/min-price', ensureAuthenticated, async (req, res) => {
+app.get('/min-price', ensureSubscribed, async (req, res) => {
     const { goodsId, minProfit, stickerOverpay, chatId } = req.query;
     if (!+goodsId) return res.send({ error: 'Please, provide Item ID' })
     const data = await csparser2(goodsId, minProfit, stickerOverpay, req.user.id);
@@ -126,6 +126,15 @@ app.use((err, req, res, next) => {  // error handler
 
 async function ensureAuthenticated(req, res, next) {
     // let coockieCode = res.locals.cookie.code
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.send({ error: 'Please, link your Steam account' });
+        return
+    }
+}
+
+async function ensureSubscribed(req, res, next) {
     if (req.isAuthenticated()) {
         let sub = await Subscriber.findById(req.user.id).exec()
             .catch(e => {

@@ -30,7 +30,7 @@ export default async (data, chatId) => {
     for (let i = 0; i < 2; i++) { // \nDefault price: ${minPrice}¥
         if (!data[i]?.name) return
         let message = `
-            \n${data[i].name} ▄︻デ══━一 
+            \n${data[i].name}
             \nItem price: ¥${data[i].defaultPrice}
             \nProfit: 🔥 ${data[i].roundedProfit}% 🔥
             \nStickers total price: ¥${data[i].total_sticker_price}
