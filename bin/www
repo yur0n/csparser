@@ -1,7 +1,18 @@
 import app from '../src/app.js'
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`)
-})
+const privateKey = fs.readFileSync(path.join(import.meta.dirname, '../../branch/website/certs/cdn_private.key.pem'), 'utf8');
+const certificate = fs.readFileSync(path.join(import.meta.dirname, '../../branch/website/certs/cdn_domain.cert.pem'), 'utf8');
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+};
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(portTls, () => {
+	console.log(`HTTPS Server is running on port ${PORT}`);
+});
