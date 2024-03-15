@@ -19,22 +19,18 @@ body.lock{
 }
 
 
-
-
-
 main{
     width: 100%;
     height: 100vh;
     min-height: 900px;
     position: relative;
     background-color: #030024;
+    display: flex
 }
 
 body.lock main{
     margin-right: 17px;
 }
-
-
 
 
 
@@ -48,9 +44,6 @@ main .block_info{
     left: 100px;
     z-index: 2;
 }
-
-
-
 
 main .block_info .block_info__buttons{
     display: flex;

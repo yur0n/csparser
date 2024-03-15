@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/settings.css">
+    <link rel="stylesheet" href="/css/modal-side-bar.css">
 
     <link rel="stylesheet" href="/css/media/index_media.css">
 
@@ -26,17 +27,17 @@
     </div>
     <div class="header_right">
         <div class="links">
-            <a href="https://twitter.com/?lang=ru" class="link">
+            <a href="/coming-soon" class="link">
                 <span><img src="img/icons/icon_twitter.svg" alt=""></span>
                 Twitter
             </a>
 
-            <a href="https://vk.com" class="link">
+            <!-- <a href="/coming-soon" class="link">
                 <span><img src="img/icons/icon_vk.svg" alt=""></span>
                 Vkontakte
-            </a>
+            </a> -->
 
-            <a href="https://t.me/nemorgenshtern" class="link">
+            <a href="/coming-soon" class="link">
                 <span><img src="img/icons/icon_telegram.svg" alt=""></span>
                 Telegram
             </a>
@@ -78,14 +79,12 @@
                     <img src="img/icons/icon_run.svg" alt="">
                     <span>Run</span>
                 </a>
-                <input type="number" placeholder="Item ID" style="background-color: #55526B;" class="header_button" id="goodsId">
                 <a href="" class="header_button" id="button-clear">
                     <img src="img/icons/icon_clear.svg" alt="">
                     <span>Clear</span>
                 </a>
-                </a>
             </div>
-
+                
             <div class="window_text" data-simplebar data-simplebar-auto-hide="false">
                 <div class="text">
                 </div>
@@ -100,13 +99,53 @@
                 <div class="text">
                 </div>
             </div>
+            
+            
+        </div>
+        
+    </div>
+    <a href="" class="open-modal-side-bar" id="">
+        <img src="img/icons/open-side-bar.svg" alt="">
+    </a>
+    <div class="modal">
+        <div class="block_info__window">
+            <div class="window_header">
+                
+                <input type="" placeholder="Item name" class="header_input" id="goodsId">
+                <a href="" class="header_button" id="button-add">
+                    <img src="img/icons/add.svg" alt="">
+                </a>
+                <a href="" class="header_button" id="button-delete">
+                    <img src="img/icons/delete.svg" alt="">
+                </a>
+            </div>
+                
+            <div class="window_text" data-simplebar data-simplebar-auto-hide="false">
+
+               <div class="text">
+                <span>Item</span><span>Float range</span>
+                
+                  <!-- <div class="item-container">
+                    <div class="item-name">Specialist Gloves | Marble</div>
+                    <div class="float-range">
+                        <input type="number" placeholder="0.015" name="minFloat">
+                        <input type="number" placeholder="0.025" name="maxFloat">
+                    </div>
+                  </div> -->
+                
+               </div>
+
+            </div>
+            
+            
         </div>
     </div>
 
-
+    
     <div class="patterns">
         <img src="img/patterns/ellipse.svg" alt="">
     </div>
+    
 </main>
 
 
@@ -186,6 +225,7 @@
 <script src="/js/mainscript.js"></script>
 <script src="/js/settings.js"></script>
 <script src="/js/account.js"></script>
+<script src="/js/rightsidebar.js"></script>
 
 </body>
 </html>
