@@ -6,6 +6,11 @@ let selectableDivs = document.querySelectorAll('.item-name');
 const addBtn = document.getElementById('button-add');
 const deleteBtn = document.getElementById('button-delete');
 
+itemNameInput.addEventListener('input', (e) => {
+	console.log(e.target.value)
+	localStorage.setItem('goodsId', e.target.value)
+})
+
 openSideBar.addEventListener('click', function(e) {
 	e.preventDefault();
 	if (modalSideBar.classList.contains('show')) {

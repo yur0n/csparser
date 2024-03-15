@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const windowText = document.querySelector('.window_text .text');
     const runButton = document.getElementById('button-run');
     const clearButton = document.getElementById('button-clear');
-    const goodsIdInput = document.getElementById('.modal .block_info__window .window_header .header_input');
     const offButton = document.querySelector('.header_button:nth-last-child(2)');
 
     let isRunning = false;
@@ -71,10 +70,6 @@ document.addEventListener('DOMContentLoaded', function () {
             interval = setTimeout(fetchDataAndDisplay, 5_000);
         }
     }
-
-    goodsIdInput.addEventListener('input', (e) => {
-        localStorage.setItem('goodsId', e.target.value)
-    })
 
     // Обработчик события клика на кнопку "Run"
     runButton.addEventListener('click', async (e) => {
