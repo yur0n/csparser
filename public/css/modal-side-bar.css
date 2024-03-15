@@ -172,6 +172,7 @@ main .modal .block_info__window .window_text .simplebar-vertical .simplebar-scro
     border: 3px solid #0a0505;
     border-radius: 10px;
     cursor: pointer;
+	overflow: hidden;
 }
 .item-name.selected {
     background-color: #52557b;
@@ -186,7 +187,7 @@ main .modal .block_info__window .window_text .simplebar-vertical .simplebar-scro
     width: 70px;
     height: 30px;
     margin-right: 10px;
-    margin-left: 40px
+    margin-left: 40px;
 }
   
 .float-range input:last-child {
