@@ -25,7 +25,7 @@ main .modal{
     left: 1270px;
     z-index: 2;
 
-	transition: top 1s ease-in-out;
+	transition: top 0.8s ease-in-out;
 }
 main .modal.show {
 	top: 150px;
@@ -107,9 +107,9 @@ main .modal .block_info__window .window_text .text span:nth-child(2){
 main .modal .block_info__window .window_text .simplebar-vertical{
     width: 18px !important;
     padding-top: 20px;
-    border-left: 1px solid #DCDDE5;
+    border-left: 1px solid #a6a8b6;
     border-radius: 0 10px 10px 0;
-    background-color: #7f83b5;
+    background-color: #c0d4da;
 }
 
 main .modal .block_info__window .window_text .simplebar-vertical::before{
@@ -146,7 +146,7 @@ main .modal .block_info__window .window_text .simplebar-vertical .simplebar-scro
     height: calc(100% - 45px);
     left: 0;
     border-radius: 0;
-    background-color: #9fa2c7;
+    background-color: #393e75;
 }
 
 .item-container {
@@ -161,7 +161,7 @@ main .modal .block_info__window .window_text .simplebar-vertical .simplebar-scro
     display: flex;
     justify-content: center;
     align-items: center;
-      text-align: center;
+    text-align: center;
     display: flex;
     flex: 1;
 }
@@ -173,6 +173,7 @@ main .modal .block_info__window .window_text .simplebar-vertical .simplebar-scro
     border-radius: 10px;
     cursor: pointer;
 	overflow: hidden;
+	user-select: none;
 }
 .item-name.selected {
     background-color: #52557b;
