@@ -16,7 +16,7 @@ main .open-modal-side-bar img{
 main .modal{
     font-family: "Poppins Medium";
     color: white;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 70px;
     width: 608px;
@@ -25,10 +25,10 @@ main .modal{
     left: 1270px;
     z-index: 2;
 
-	transition: top 0.8s ease-in-out;
+	/* transition: top 0.8s ease-in-out; */
 }
 main .modal.show {
-	top: -800px;
+	display: flex;
 }
 
 main .modal .block_info__window{
