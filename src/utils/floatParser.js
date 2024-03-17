@@ -65,11 +65,23 @@ async function floatparse(goodId, float_min, float_max, cookie) {
             let price = item.price;
             let name = goodsInfos[goodId].name || '';
             let float = item.asset_info.paintwear;
+            const assetid = item.asset_info.assetid;
+			const classid = item.asset_info.classid;
+			const instanceid = item.asset_info.instanceid;
+			const contextid = item.asset_info.contextid;
+			const sell_order_id = item.id !== undefined ? item.id : 'N/A';
+			const link = `https://buff.163.com/goods/${goodId}?appid=730` +
+				`&classid=${classid}&instanceid=${instanceid}&assetid=${assetid}` +
+				`&contextid=${contextid}&sell_order_id=${sell_order_id}`;
+			const photo = item.asset_info.info?.inspect_mobile_url || item.img_src;
+
             result.push({
                 name,
                 float,
                 price,
-                defaultPrice: minPrice
+                defaultPrice: minPrice,
+                link,
+                photo
             });
         }
         return result;

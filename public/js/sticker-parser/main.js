@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function fetchDataAndDisplay() {
         try {
-            isRunning = false;
 
             let skins = await sideBarStorage.keys();
             if (!skins.length) return replyWithErrorBlock({ error: 'No items in the list' });
@@ -21,7 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const minProfit = localStorage.getItem('minProfit');
             const stickerOverpay = localStorage.getItem('stickerOverpay');
             
-            windowText.innerText = 'Working...';
+            let mes = document.createElement('div')
+            mes.innerHTML = `<h2>Working...</h2>`
+            windowText.appendChild(mes);
+
             const response = await fetch('/sticker-parser', {
                 method: 'POST',
                 headers: {
@@ -59,22 +61,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         <ul>${stickerList}</ul>
                         <p>Stickers Total Price: ¥${item.total_sticker_price}</p>
                         <p>Profit: ${item.roundedProfit}%</p>
-                        <a href="${item.link}" target="_blank"><p>click to buy</p></a> 
+                        <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         <hr>
                         `;
-                        // <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         windowText.appendChild(resultItem);
                     });
                 });
                 if (!windowText.innerHTML) windowText.innerHTML = 'No data available';
-                isRunning = true;
             } else if (responseData?.error) {
                 replyWithErrorBlock(responseData)
             } else if (responseData?.message){
                 windowText.innerText = responseData.message;
             } else {
                 windowText.innerText = 'No data available';
-                isRunning = true;
             }
         } catch (error) {
             console.error('Error fetching data:', error);

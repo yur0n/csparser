@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function fetchDataAndDisplay() {
         try {
-            isRunning = false;
 
             let storageKeys = await sideBarStorage.keys()
             if (!storageKeys.length) return replyWithErrorBlock({ error: 'No items in the list' })
@@ -19,10 +18,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 let item = await sideBarStorage.getItem(key)
                 skins.push(item)
             }
-            
             const chatId = localStorage.getItem('chatId')
 
-            windowText.innerText = 'Working...';
+            let mes = document.createElement('div')
+            mes.innerHTML = `<h2>Working...</h2>`
+            windowText.appendChild(mes);
+
             const response = await fetch('/float-parser', {
                 method: 'POST',
                 headers: {
@@ -54,21 +55,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p>Float: ${item.float}</p>
                         <p>Price: ¥${item.price}</p>
                         <p>Default Price: ¥${item.defaultPrice}</p>
+                        <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         <hr>
                         `;
-                        // <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         windowText.appendChild(resultItem);
                     });
                 });
                 if (!windowText.innerHTML) windowText.innerHTML = 'No data available';
-                isRunning = true;
             } else if (responseData?.error) {
                 replyWithErrorBlock(responseData)
             } else if (responseData?.message){
                 windowText.innerText = responseData.message;
             } else {
                 windowText.innerText = 'No data available';
-                isRunning = true;
             }
         } catch (error) {
             console.error('Error fetching data:', error);

@@ -57,29 +57,26 @@ async function sendToBotStickers (data, chatId) {
 }
 
 async function sendToBotFloat (data, chatId) {
-    console.log('here')
     let can_send_to_bot = true
     for (const items of data) {
         console.log(items)
         if (!items.length) continue;
         for (const item of items) {
             if (item.wrongName) continue;
-            console.log(item)
             let message = `
                 \n${item.name}
                 \nFloat: ${item.float}
                 \nPrice: ¥${item.price}
                 \nDefault Price: ¥${item.defaultPrice}
                 `;
-            await bot.api.sendMessage(chatId, message)
-            // await bot.api.sendPhoto(chatId, item.photo, {
-            //     caption: message,
-                // reply_markup: {
-                //     inline_keyboard: [
-                //         [{ text: '💰  BUY  💰', url: item.link }]
-                //     ]
-                // }
-            // })
+            await bot.api.sendPhoto(chatId, item.photo, {
+                caption: message,
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: '💰  BUY  💰', url: item.link }]
+                    ]
+                }
+            })
             .catch(() => can_send_to_bot = false)
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
