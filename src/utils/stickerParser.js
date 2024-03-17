@@ -1,17 +1,6 @@
-import { readFileSync } from 'fs';
 import User from '../models/user.js';
+import { pricesDict, skinIDs } from './getSkinIDs.js'
 
-const pricesDict = {};
-const idsData = readFileSync("src/utils/ids", "utf-8");
-idsData.split("\n").forEach((line) => {
-    const parts = line.split(",");
-    if (parts.length === 3) {
-        const stickerId = parts[0].trim();
-        const stickerName = parts[1].trim();
-        const stickerPrice = parseFloat(parts[2].trim());
-        pricesDict[stickerName] = stickerPrice;
-    }
-});
 
 async function getData(url, cookie, attempt = 0) { 
 	if (attempt >= 2) return { error: 'Buff163 Login Required' }
@@ -40,12 +29,11 @@ async function getData(url, cookie, attempt = 0) {
 	}
 }
 
-export default async (goodsId, minProfit, stickerOverpay, steamID) => {
+async function parseStickers(goodsId, minProfit, stickerOverpay, cookie) {
 	try {
-		let { cookie } = await User.findById(steamID, { cookie: 1 , _id: 0 })
-		if (!cookie) return { error: 'No cookie' }
-
-		let url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&goods_id=${goodsId}&page_num=1&sort_by=created.desc&mode=&allow_tradable_cooldown=1&_=1710146946248`
+		let url = `https://buff.163.com/api/market/goods/sell_order?game=csgo` +
+		`&goods_id=${goodsId}&page_num=1&sort_by=created.desc&mode=` +
+		`&allow_tradable_cooldown=1&_=1710146946248`
 		
 		let data = await getData(url, cookie)
 		if (data.error) return data
@@ -66,7 +54,9 @@ export default async (goodsId, minProfit, stickerOverpay, steamID) => {
 			const instanceid = item.asset_info.instanceid;
 			const contextid = item.asset_info.contextid;
 			const sell_order_id = item.id !== undefined ? item.id : 'N/A';
-			const link = `https://buff.163.com/goods/${goodsId}?appid=730&classid=${classid}&instanceid=${instanceid}&assetid=${assetid}&contextid=${contextid}&sell_order_id=${sell_order_id}`;
+			const link = `https://buff.163.com/goods/${goodsId}?appid=730` +
+				`&classid=${classid}&instanceid=${instanceid}&assetid=${assetid}` +
+				`&contextid=${contextid}&sell_order_id=${sell_order_id}`;
 			const photo = item.asset_info.info?.inspect_mobile_url || item.img_src;
 
 			let totalStickerPrice = 0;
@@ -84,7 +74,6 @@ export default async (goodsId, minProfit, stickerOverpay, steamID) => {
 			}
 
 			const sticker_profit = totalStickerPrice / stickerOverpay;
-			// add minPrice algorithm later const profit = ((sticker_profit - (item.price - minPrice)) / item.price) * 100; 
 			let profit = (sticker_profit / item.price) * 100;
 			if (isNaN(profit) || !isFinite(profit)) profit = 0
 			const roundedProfit = profit.toFixed(2);
@@ -106,5 +95,24 @@ export default async (goodsId, minProfit, stickerOverpay, steamID) => {
         console.error('Error fetching data:', error);
         return { error: 'Error fetching data' };
     }
+}
+
+export default async (skins, minProfit, stickerOverpay, steamID) => {
+	let { cookie } = await User.findById(steamID, { cookie: 1 , _id: 0 })
+	if (!cookie) return { error: 'No cookie provided' }
+	const result = [];
+
+	for (const skin of skins) {
+		let id = skinIDs[skin];
+		if (id) {
+            let res = await parseStickers(id, minProfit, stickerOverpay, cookie)
+			if (res.error) return res
+            result.push(res);
+        } else {
+			result.push([{ wrongName: skin }])
+		}
+		await new Promise(resolve => setTimeout(resolve, 3000));
+	}
+	return result
 }
 

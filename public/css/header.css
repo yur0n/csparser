@@ -9,7 +9,16 @@ header{
     background-color: #1C193A;
 }
 
-
+header .title{
+    position: absolute;
+    color: white;
+    font-family: "Poppins Medium";
+    left: 100px;
+    top: 16px;
+}
+header .title h1{
+    margin: 0;
+}
 
 header .header_left{
     display: flex;

@@ -25,29 +25,65 @@ bot.on('message', async (ctx) => {
 
 bot.start()
 
-export default async (data, chatId) => {
+async function sendToBotStickers (data, chatId) {
     let can_send_to_bot = true
-    for (let i = 0; i < 2; i++) { // \nDefault price: ${minPrice}¥
-        if (!data[i]?.name) return
-        let message = `
-            \n${data[i].name}
-            \nItem price: ¥${data[i].defaultPrice}
-            \nProfit: 🔥 ${data[i].roundedProfit}% 🔥
-            \nStickers total price: ¥${data[i].total_sticker_price}
-            \nStickers:`;
-        data[i].stickers.forEach(sticker => {
-            message += `\n- ${sticker.name}: ¥${sticker.price}`;
-        });
+    for (const items of data) {
+        if (!items.length) continue;
+        for (const item of items) {
+            if (item.wrongName) continue;
+            let message = `
+                \n${item.name}
+                \nItem price: ¥${item.defaultPrice}
+                \nProfit: 🔥 ${item.roundedProfit}% 🔥
+                \nStickers total price: ¥${item.total_sticker_price}
+                \nStickers:
+                `;
+            item.stickers.forEach(sticker => {
+                message += `\n- ${sticker.name}: ¥${sticker.price}`;
+            });
 
-        await bot.api.sendPhoto(chatId, data[i].photo, {
-            caption: message,
-            reply_markup: {
-                inline_keyboard: [
-                    [{ text: '💰  BUY  💰', url: data[i].link }]
-                ]
-            }
-        })
-        .catch(() => can_send_to_bot = false)
-        await new Promise(resolve => setTimeout(resolve, 2000));
+            await bot.api.sendPhoto(chatId, item.photo, {
+                caption: message,
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: '💰  BUY  💰', url: item.link }]
+                    ]
+                }
+            })
+            .catch(() => can_send_to_bot = false)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
     }
 }
+
+async function sendToBotFloat (data, chatId) {
+    console.log('here')
+    let can_send_to_bot = true
+    for (const items of data) {
+        console.log(items)
+        if (!items.length) continue;
+        for (const item of items) {
+            if (item.wrongName) continue;
+            console.log(item)
+            let message = `
+                \n${item.name}
+                \nFloat: ${item.float}
+                \nPrice: ¥${item.price}
+                \nDefault Price: ¥${item.defaultPrice}
+                `;
+            await bot.api.sendMessage(chatId, message)
+            // await bot.api.sendPhoto(chatId, item.photo, {
+            //     caption: message,
+                // reply_markup: {
+                //     inline_keyboard: [
+                //         [{ text: '💰  BUY  💰', url: item.link }]
+                //     ]
+                // }
+            // })
+            .catch(() => can_send_to_bot = false)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+    }
+}
+
+export { sendToBotStickers, sendToBotFloat }

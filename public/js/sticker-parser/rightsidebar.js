@@ -6,10 +6,12 @@ let selectableDivs = document.querySelectorAll('.item-name');
 const addBtn = document.getElementById('button-add');
 const deleteBtn = document.getElementById('button-delete');
 
-itemNameInput.addEventListener('input', (e) => {
-	console.log(e.target.value)
-	localStorage.setItem('goodsId', e.target.value)
-})
+const sideBarStorage = localforage.createInstance({ name: 'sideBarSticker' });
+
+// load items from sideBarStorage
+sideBarStorage.iterate((value, key) => {
+	loadItems(key, value);
+}).catch(console.error);
 
 openSideBar.addEventListener('click', function(e) {
 	e.preventDefault();
@@ -30,47 +32,46 @@ selectableDivs.forEach(div => {
 deleteBtn.addEventListener('click', function(e) {
 	e.preventDefault();
 	const selectedDivs = document.querySelectorAll('.item-name.selected');
-	if (selectedDivs) selectedDivs.forEach(div => {
+	if (selectedDivs) selectedDivs.forEach(async div => {
 		div.parentElement.remove();
-	})
+		sideBarStorage.removeItem(div.textContent).catch(console.error);
+	});
 });
 
 addBtn.addEventListener('click', addItem);
 
-function addItem(e) {
+async function addItem(e) {
 	e.preventDefault();
+	let itemNameText = itemNameInput.value;
 	if (itemNameInput.value.length < 5) return;
+	const allItems = document.querySelectorAll('.item-name');
+	for (let i = 0; i < allItems.length; i++) {
+		if (allItems[i].textContent === itemNameText) {
+			alert('Item with the same name already exists');
+			return;
+		}
+	}
+	itemNameInput.value = '';
+
+	await loadItems(itemNameText);
+}
+
+async function loadItems(itemNameText) {
+
 	const newItemContainer = document.createElement('div');
 	newItemContainer.classList.add('item-container'); 
 
 	const itemName = document.createElement('div');
 	itemName.classList.add('item-name');
-	itemName.textContent = itemNameInput.value;
-	newItemContainer.appendChild(itemName);
-  
-	const floatRange = document.createElement('div');
-	floatRange.classList.add('float-range');
-  
-	const minFloatInput = document.createElement('input');
-	minFloatInput.type = "number";
-	minFloatInput.value = 0.01;
-	minFloatInput.name = "minFloat";
-	floatRange.appendChild(minFloatInput);
-  
-	const maxFloatInput = document.createElement('input');
-	maxFloatInput.type = "number";
-	maxFloatInput.value = 0.02;
-	maxFloatInput.name = "maxFloat";
-	floatRange.appendChild(maxFloatInput);
-  
-	newItemContainer.appendChild(floatRange);
+	itemName.textContent = itemNameText;
 
+	newItemContainer.appendChild(itemName);
 	itemsDiv.appendChild(newItemContainer);
 
 	selectableDivs = document.querySelectorAll('.item-name');
 	itemName.addEventListener('click', function() {
 		this.classList.toggle('selected');
 	});
-	itemNameInput.value = '';
-	
+
+	await sideBarStorage.setItem(itemNameText, itemNameText);
 }

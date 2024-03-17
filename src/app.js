@@ -2,7 +2,7 @@ import express from 'express';
 import './db/connection.js';
 import MongoStore from 'connect-mongo'; // session store for passport
 import './bots/bot_admin.js'; // bot admin
-import sendToBot from './bots/bot_notifier.js'; // bot notifier
+import { sendToBotFloat, sendToBotStickers } from './bots/bot_notifier.js'; // bot notifier 
 import passport from 'passport';
 import session from 'express-session';
 import cors from 'cors';
@@ -11,8 +11,9 @@ import { join } from 'path';
 import Subscriber from './models/subscriber.js';
 import User from './models/user.js';
 
-import csparser from './utils/csparser.js';
-import csparser2 from './utils/csparser2.js';
+// import csparser from './utils/csparser.js';
+import stickerParser from './utils/stickerParser.js';
+import floatParser from './utils/floatParser.js';
 import authSteam from './routes/authSteam.js';
 
 const app = express();
@@ -57,7 +58,14 @@ app.use(passport.session());
 app.use('/auth', authSteam);
 
 app.get('/', (req, res) => {
-    res.render('index', { user: req.user});
+    res.redirect('/sticker-parser');
+});
+app.get('/sticker-parser', (req, res) => {
+    res.render('sticker-parser', { user: req.user });
+});
+
+app.get('/parse-with-float', (req, res) => {
+    res.render('parse-with-float', { user: req.user });
 });
 
 app.get('/coming-soon', (req, res) => {
@@ -108,12 +116,20 @@ app.get('/logout', function(req, res, next) {
     });
 });
 
-app.get('/min-price', ensureSubscribed, async (req, res) => {
-    const { goodsId, minProfit, stickerOverpay, chatId } = req.query;
-    if (!+goodsId) return res.send({ error: 'Please, provide Item ID' })
-    const data = await csparser2(goodsId, minProfit, stickerOverpay, req.user.id);
+app.post('/sticker-parser', ensureSubscribed, async (req, res) => {
+    const { skins, minProfit, stickerOverpay, chatId } = req.body;
+    if (!skins.length) return res.send({ error: 'Please, provide items' })
+    const data = await stickerParser(skins, minProfit, stickerOverpay, req.user.id);
     res.send(data);
-    if (chatId && data.length) sendToBot(data, chatId);
+    if (chatId && !data.error) sendToBotStickers(data, chatId);
+});
+
+app.post('/float-parser', ensureSubscribed, async (req, res) => {
+    const { skins, chatId } = req.body;
+    if (!skins.length) return res.send({ error: 'Please, provide items' })
+    const data = await floatParser(skins, req.user.id);
+    res.send(data);
+    if (chatId && !data.error) sendToBotFloat(data, chatId);
 });
 
 app.use((err, req, res, next) => {  // error handler
