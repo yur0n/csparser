@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "main": "./bin/www",
+  "private": true,
   "scripts": {
     "start": "node --env-file=.env bin/www",
     "dev": "nodemon --env-file=.env bin/www -e *"
