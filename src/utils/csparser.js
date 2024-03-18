@@ -86,4 +86,3 @@ export default async (goodsId, minProfit, stickerOverpay) => {
         return null;
     }
 }
-
