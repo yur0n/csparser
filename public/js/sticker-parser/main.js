@@ -1,1 +1,130 @@
-(()=>{"use strict";document.addEventListener("DOMContentLoaded",(function(){const e=document.getElementById("popupBtn"),t=document.querySelector(".window_text .text"),n=document.getElementById("button-run"),r=document.getElementById("button-clear");document.querySelector(".header_button:nth-last-child(2)");let a,i=!1;const o=localforage.createInstance({name:"sideBarSticker"});async function c(){try{let e=await o.keys();if(!e.length)return s({error:"No items in the list"});console.log(e);const n=localStorage.getItem("chatId"),r=localStorage.getItem("minProfit"),a=localStorage.getItem("stickerOverpay");let i=document.createElement("div");i.innerHTML="<h2>Working...</h2>",t.appendChild(i);const c=await fetch("/sticker-parser",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({skins:e,minProfit:r,stickerOverpay:a,chatId:n})}),l=await c.json();console.log("Response Data:",l),l?.length?(t.innerText="",l.forEach((e=>{e.length&&e.forEach((e=>{const n=document.createElement("div");if(e.wrongName)return n.innerHTML=`<h2>Wrong Name: ${e.wrongName}</h2>\n                            <hr>`,void t.appendChild(n);const r=e.stickers.map((e=>{const t="потертая"===e.price?e.price:`¥${e.price}`;return`<li>${e.name}: ${t}</li>`})).join("");n.innerHTML=`\n                        <h2>New Item Found!</h2>\n                        <p>Name: ${e.name}</p>\n                        <p>Price: ¥${e.defaultPrice}</p>\n                        <p>Stickers:</p>\n                        <ul>${r}</ul>\n                        <p>Stickers Total Price: ¥${e.total_sticker_price}</p>\n                        <p>Profit: ${e.roundedProfit}%</p>\n                        <a href="${e.link}" target="_blank"><p>💰  BUY  💰</p></a>\n                        <hr>\n                        `,t.appendChild(n)}))})),t.innerHTML||(t.innerHTML="No data available")):l?.error?s(l):t.innerText=l?.message?l.message:"No data available"}catch(e){console.error("Error fetching data:",e),t.innerText="Failed to fetch data"}i&&(a=setTimeout(c,1e4))}function s(r){e.style.display="block",e.getElementsByTagName("p")[0].innerText=`${r.error}: ${r.url||""}`,i=!1,clearInterval(a),n.querySelector("span").innerText="Run",n.classList.remove("_active"),n.style.pointerEvents="none",setTimeout((()=>n.style.pointerEvents=""),5e3),t.innerText=""}n.addEventListener("click",(async t=>{if(t.preventDefault(),n.classList.contains("_active"))i=!1,clearInterval(a),n.querySelector("span").innerText="Run",n.classList.remove("_active"),n.style.pointerEvents="none",setTimeout((()=>n.style.pointerEvents=""),3e3);else{if(!document.cookie.includes("steam=true"))return e.style.display="block",void(e.getElementsByTagName("p")[0].innerText="Please, link your Steam account");i||(n.querySelector("span").innerText="Off",n.classList.add("_active"),i=!0,c())}})),r.addEventListener("click",(function(e){e.preventDefault(),t.innerText=""}))}))})();
+document.addEventListener('DOMContentLoaded', function () {
+    const popupBtn = document.getElementById("popupBtn");
+    const windowText = document.querySelector('.window_text .text');
+    const runButton = document.getElementById('button-run');
+    const clearButton = document.getElementById('button-clear');
+    const offButton = document.querySelector('.header_button:nth-last-child(2)');
+
+    let isRunning = false;
+    let interval
+
+	const sideBarStorage = localforage.createInstance({ name: 'sideBarSticker' });
+
+    async function fetchDataAndDisplay() {
+        try {
+
+            let skins = await sideBarStorage.keys();
+            if (!skins.length) return replyWithErrorBlock({ error: 'No items in the list' });
+
+            console.log(skins)
+
+            const chatId = localStorage.getItem('chatId');
+            const minProfit = localStorage.getItem('minProfit');
+            const stickerOverpay = localStorage.getItem('stickerOverpay');
+            
+            let mes = document.createElement('div')
+            mes.innerHTML = `<h2>Working...</h2>`
+            windowText.appendChild(mes);
+
+            const response = await fetch('/sticker-parser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ skins, minProfit, stickerOverpay, chatId })
+            });
+
+            const responseData = await response.json();
+
+            console.log('Response Data:', responseData);
+
+            if (responseData?.length) {
+                windowText.innerText = '';
+                responseData.forEach((items) => {
+                    if (!items.length) return;
+                    items.forEach((item) => {
+                        const resultItem = document.createElement('div');
+                        if (item.wrongName) {
+                            resultItem.innerHTML = 
+                            `<h2>Wrong Name: ${item.wrongName}</h2>
+                            <hr>`;
+                            windowText.appendChild(resultItem);
+                            return;
+                        }
+                        const stickerList = item.stickers.map(sticker => {
+                            const stickerPrice = sticker.price === 'потертая' ? sticker.price : `¥${sticker.price}`;
+                            return `<li>${sticker.name}: ${stickerPrice}</li>`;
+                        }).join('');
+                        resultItem.innerHTML = `
+                        <h2>New Item Found!</h2>
+                        <p>Name: ${item.name}</p>
+                        <p>Price: ¥${item.defaultPrice}</p>
+                        <p>Stickers:</p>
+                        <ul>${stickerList}</ul>
+                        <p>Stickers Total Price: ¥${item.total_sticker_price}</p>
+                        <p>Profit: ${item.roundedProfit}%</p>
+                        <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
+                        <hr>
+                        `;
+                        windowText.appendChild(resultItem);
+                    });
+                });
+                if (!windowText.innerHTML) windowText.innerHTML = 'No data available';
+            } else if (responseData?.error) {
+                replyWithErrorBlock(responseData)
+            } else if (responseData?.message){
+                windowText.innerText = responseData.message;
+            } else {
+                windowText.innerText = 'No data available';
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            windowText.innerText = 'Failed to fetch data';
+        }
+
+        if (isRunning) {
+            interval = setTimeout(fetchDataAndDisplay, 10_000);
+        }
+    }
+
+    function replyWithErrorBlock(message) {
+        popupBtn.style.display = "block";
+        popupBtn.getElementsByTagName('p')[0].innerText = `${message.error}: ${(message.url || '')}` // `<a href='${(responseData.url || '')}'>${responseData.error}</a>`
+        isRunning = false;
+        clearInterval(interval)
+        runButton.querySelector("span").innerText = "Run";
+        runButton.classList.remove("_active");
+        runButton.style.pointerEvents = 'none'
+        setTimeout(() => runButton.style.pointerEvents = '', 5000)
+        windowText.innerText = '';
+    }
+
+    runButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (runButton.classList.contains("_active")){
+            isRunning = false;
+            clearInterval(interval)
+            runButton.querySelector("span").innerText = "Run";
+            runButton.classList.remove("_active");
+            runButton.style.pointerEvents = 'none'
+            setTimeout(() => runButton.style.pointerEvents = '', 3000)
+        } else {
+            if (!document.cookie.includes('steam=true')) {
+                popupBtn.style.display = "block";
+                popupBtn.getElementsByTagName('p')[0].innerText = 'Please, link your Steam account'
+                return
+            }
+            if (!isRunning) {
+                runButton.querySelector("span").innerText = "Off";
+                runButton.classList.add("_active");
+                isRunning = true;
+                fetchDataAndDisplay();
+            }
+        }
+    });
+
+    clearButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        windowText.innerText = '';
+    });
+});
