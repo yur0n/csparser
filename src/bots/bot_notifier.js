@@ -59,7 +59,6 @@ async function sendToBotStickers (data, chatId) {
 async function sendToBotFloat (data, chatId) {
     let can_send_to_bot = true
     for (const items of data) {
-        console.log(items)
         if (!items.length) continue;
         for (const item of items) {
             if (item.wrongName) continue;
