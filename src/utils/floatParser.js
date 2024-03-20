@@ -15,16 +15,18 @@ async function getData(url, cookie, attempt = 0) {
 		if (res.code == 'Captcha Validate Required') {
 			return { error: res.code, url: res.confirm_entry.entry.url }
 		}
-		if (res.code == 'Login Required') {
+		else if (res.code == 'Action Forbidden') {
+			return { error: res.code + res.error }
+		}
+		else if (res.code == 'Login Required') {
 			await new Promise(resolve => setTimeout(resolve, 2000));
 			return await getData(url, cookie, attempt + 1)
-		} else {
-			if (!res.data?.items) return { error: 'Wrong Item ID'}
+		} else if (res.code == 'OK'){
 			return res.data
 		}
 	} else {
 		console.error('Failed to fetch data:', response.statusText);
-		return { error: 'Failed to fetch data' };
+		return { error: 'Failed to fetch data: ' + response.statusText };
 	}
 }
 
