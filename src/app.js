@@ -56,6 +56,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //routes
+app.get('/autobuy', async (req, res) => {
+    let { cookie } = await User.findById(req.user.id).exec();
+    if (cookie) await autobuy(cookie);
+    res.send({ status: 'ok' });
+});
+
 app.use('/auth', authSteam);
 
 app.get('/', (req, res) => {
@@ -70,8 +76,6 @@ app.get('/parse-with-float', (req, res) => {
 });
 
 app.get('/coming-soon', async (req, res) => {
-    let { cookie } = await User.findById(req.user.id).exec();
-    if (cookie) await autobuy(cookie);
     res.render('coming-soon');
 });
 
