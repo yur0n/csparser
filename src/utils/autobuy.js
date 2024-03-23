@@ -8,6 +8,7 @@ export default async (cookie, link) => {
     let options = new Options();
     options.addArguments('--headless');
     options.addArguments('--disable-gpu');
+	options.addArguments('--no-sandbox');
 
     let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
@@ -17,12 +18,12 @@ export default async (cookie, link) => {
         await driver.get('https://buff.163.com/market/csgo');
         await driver.manage().deleteAllCookies();
 
-		cookie.split(';').map(async c => {
-			let [name, value] = c.split('=');
-			await driver.manage().addCookie({ name, value });
-		});
+		// cookie.split(';').map(async c => {
+		// 	let [name, value] = c.split('=');
+		// 	await driver.manage().addCookie({ name, value });
+		// });
 
-        // await driver.manage().addCookie({ name: 'session', value: '1-Z6kP9tlHypQ3qoYXwLhaA8lHJuUYa-aKXJGu8ULFll072023945832' })
+        await driver.manage().addCookie({ name: 'session', value: '1-Z6kP9tlHypQ3qoYXwLhaA8lHJuUYa-aKXJGu8ULFll072023945832' })
 
         await driver.get(link);
         await driver.sleep(2000);
