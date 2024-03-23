@@ -24,7 +24,7 @@ export default async (cookie, link) => {
         // await driver.manage().addCookie({ name: 'session', value: '1-Z6kP9tlHypQ3qoYXwLhaA8lHJuUYa-aKXJGu8ULFll072023945832' })
 
         await driver.get(link);
-        await driver.sleep(2000);
+        await driver.sleep(5000);
 
 
         const firstButton = await driver.findElement(By.className('i_Btn i_Btn_big btn-buy-order '));
