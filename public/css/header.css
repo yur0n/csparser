@@ -20,6 +20,17 @@ header .title h1{
     margin: 0;
 }
 
+header .balance{
+    position: absolute;
+    color: white;
+    font-family: "Poppins Medium";
+    left: 550px;
+    top: 26px;
+}
+header .balance h3{
+    margin: 0;
+}
+
 header .header_left{
     display: flex;
     justify-content: left;

@@ -1,11 +1,12 @@
 const steamButton = document.querySelector('.button_account')
 const closePopup = document.getElementById("closeBtn")
 const popup = document.getElementById("popupBtn");
+const balance = document.querySelector('.balance').children[0]
 // const submitButton = document.getElementById("submitAccButton");
 // const codeInput = document.getElementById("codeInput");
 // const accountStatus = document.querySelector('.account_status')
 
-
+balance.textContent = 'Balance: ' + (localStorage.getItem('balance') || '¥ 0.00')
 
 steamButton.addEventListener('click', (e) => {
 	if (e.target.textContent == 'Link Steam') {
@@ -26,6 +27,7 @@ window.addEventListener("message", function(event) {
   
 	if (event.data.type && (event.data.type == "FROM_CONTENT_SCRIPT")) {
         localStorage.setItem('balance', event.data.balance);
+		balance.textContent = 'Balance: ' + event.data.balance
         console.log('Balance:', event.data.balance)
 	}
 }, false);

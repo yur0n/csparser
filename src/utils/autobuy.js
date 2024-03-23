@@ -4,7 +4,7 @@ import { Options } from 'selenium-webdriver/chrome.js'
 
 
 export default async (cookie, link) => {
-	if (!link) link = 'https://buff.163.com/goods/930483?appid=730&classid=5367597729&instanceid=188530139&assetid=31116172328&contextid=2&sell_order_id=0809892772-70F3-158346853'
+	if (!link) link = 'https://buff.163.com/s/goods.html?game=csgo&goods_id=878839'
     let options = new Options();
     options.addArguments('--headless');
     options.addArguments('--disable-gpu');

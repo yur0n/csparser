@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function replyWithErrorBlock(message) {
         popupBtn.style.display = "block";
-        popupBtn.getElementsByTagName('p')[0].innerText = `${message.error}: ${(message.url || '')}` // `<a href='${(responseData.url || '')}'>${responseData.error}</a>`
+        popupBtn.getElementsByTagName('p')[0].innerText = message.error + (message.url ? ': ' + message.url : '') // `<a href='${(responseData.url || '')}'>${responseData.error}</a>`
         isRunning = false;
         clearInterval(interval)
         runButton.querySelector("span").innerText = "Run";
