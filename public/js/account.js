@@ -20,6 +20,16 @@ closePopup.addEventListener("click", function() {
 	popup.style.display = "none";
 });
 
+window.addEventListener("message", function(event) {
+	if (event.source != window)
+	  return;
+  
+	if (event.data.type && (event.data.type == "FROM_CONTENT_SCRIPT")) {
+        localStorage.setItem('balance', event.data.balance);
+        console.log('Balance:', event.data.balance)
+	}
+}, false);
+
 // codeButton.addEventListener("click", () => {
 // 	popup.style.display = "block"; // Show the popup
 // 	codeInput.value = ""; // Clear previous input

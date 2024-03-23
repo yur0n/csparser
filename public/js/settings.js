@@ -14,7 +14,6 @@ tgChatId.addEventListener('change', (e) => {
     localStorage.setItem('chatId', e.target.value)
 }) 
 
-
 popupSettingsButtonOpen.addEventListener("click", (e) => {
     e.preventDefault();
     body.classList.add("lock");

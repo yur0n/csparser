@@ -11,9 +11,10 @@ import { join } from 'path';
 import Subscriber from './models/subscriber.js';
 import User from './models/user.js';
 
-// import csparser from './utils/csparser.js';
 import stickerParser from './utils/stickerParser.js';
 import floatParser from './utils/floatParser.js';
+import autobuy from './utils/autobuy.js';
+
 import authSteam from './routes/authSteam.js';
 
 const app = express();
@@ -68,7 +69,9 @@ app.get('/parse-with-float', (req, res) => {
     res.render('parse-with-float', { user: req.user });
 });
 
-app.get('/coming-soon', (req, res) => {
+app.get('/coming-soon', async (req, res) => {
+    let { cookie } = await User.findById(req.user.id).exec();
+    if (cookie) await autobuy(cookie);
     res.render('coming-soon');
 });
 

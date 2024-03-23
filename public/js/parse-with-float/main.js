@@ -91,11 +91,13 @@ document.addEventListener('DOMContentLoaded', function () {
         runButton.style.pointerEvents = 'none'
         setTimeout(() => runButton.style.pointerEvents = '', 5000)
         windowText.innerText = '';
+        window.postMessage({ type: "FROM_PAGE", start: false }, "*");
     }
 
     runButton.addEventListener('click', async (e) => {
         e.preventDefault();
         if (runButton.classList.contains("_active")){
+            window.postMessage({ type: "FROM_PAGE", start: false }, "*");
             isRunning = false;
             clearInterval(interval)
             runButton.querySelector("span").innerText = "Run";
@@ -109,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return
             }
             if (!isRunning) {
+                window.postMessage({ type: "FROM_PAGE", start: true }, "*");
                 runButton.querySelector("span").innerText = "Off";
                 runButton.classList.add("_active");
                 isRunning = true;
