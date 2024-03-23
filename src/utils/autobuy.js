@@ -41,7 +41,7 @@ export default async (cookie, link) => {
         // let balance = await driver.executeScript(script2);
         // let final = +balance.split(' ')[1] - +totalPrice.split(' ')[1];
         // console.log(final);
-		console.log(document.querySelector('.store-account').children[0].children[0].innerText)
+		console.log(await driver.executeScript(`return document.querySelector('.store-account').children[0].children[0].innerText`))
 		return
         const secondButton = await driver.findElement(By.className('i_Btn pay-btn'));
         await secondButton.click();
