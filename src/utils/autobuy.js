@@ -35,14 +35,14 @@ export default async (cookie, link) => {
 
         await driver.sleep(2000);
 
-        // document.querySelector('.store-account').children[0].children[0].innerText.split(' ')[1]
         // let script1 = "return document.querySelector('.total_price').innerText;";
         // let script2 = "return document.querySelector('.pay-method-list').childNodes[3].children[1].childNodes[1].childNodes[1].innerText;";
         // let totalPrice = await driver.executeScript(script1);
         // let balance = await driver.executeScript(script2);
         // let final = +balance.split(' ')[1] - +totalPrice.split(' ')[1];
         // console.log(final);
-
+		console.log(document.querySelector('.store-account').children[0].children[0].innerText)
+		return
         const secondButton = await driver.findElement(By.className('i_Btn pay-btn'));
         await secondButton.click();
 
