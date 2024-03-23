@@ -13,17 +13,14 @@ export default async (cookie, link) => {
     let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
     try {
-        // const cookies = JSON.parse(await fs.readFile('cookies.json', 'utf8'));
         
         await driver.get('https://buff.163.com/market/csgo');
         await driver.manage().deleteAllCookies();
 
 		cookie.split(';').map(async c => {
 			let [name, value] = c.split('=');
-			console.log({ name, value });
-			// await driver.manage().addCookie({ name, value });
+			if (name && value) await driver.manage().addCookie({ name, value });
 		});
-		return;
         // await driver.manage().addCookie({ name: 'session', value: '1-Z6kP9tlHypQ3qoYXwLhaA8lHJuUYa-aKXJGu8ULFll072023945832' })
 
         await driver.get(link);
