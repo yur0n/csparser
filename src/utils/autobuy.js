@@ -18,12 +18,13 @@ export default async (cookie, link) => {
         await driver.get('https://buff.163.com/market/csgo');
         await driver.manage().deleteAllCookies();
 
-		// cookie.split(';').map(async c => {
-		// 	let [name, value] = c.split('=');
-		// 	await driver.manage().addCookie({ name, value });
-		// });
-
-        await driver.manage().addCookie({ name: 'session', value: '1-Z6kP9tlHypQ3qoYXwLhaA8lHJuUYa-aKXJGu8ULFll072023945832' })
+		cookie.split(';').map(async c => {
+			let [name, value] = c.split('=');
+			console.log({ name, value });
+			// await driver.manage().addCookie({ name, value });
+		});
+		return;
+        // await driver.manage().addCookie({ name: 'session', value: '1-Z6kP9tlHypQ3qoYXwLhaA8lHJuUYa-aKXJGu8ULFll072023945832' })
 
         await driver.get(link);
         await driver.sleep(2000);
@@ -41,8 +42,7 @@ export default async (cookie, link) => {
         // let balance = await driver.executeScript(script2);
         // let final = +balance.split(' ')[1] - +totalPrice.split(' ')[1];
         // console.log(final);
-		console.log(await driver.executeScript(`return document.querySelector('.store-account').children[0].children[0].innerText`))
-		return
+		// console.log(await driver.executeScript(`return document.querySelector('.store-account').children[0].children[0].innerText`))
         const secondButton = await driver.findElement(By.className('i_Btn pay-btn'));
         await secondButton.click();
 
