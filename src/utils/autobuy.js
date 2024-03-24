@@ -2,7 +2,7 @@ import { Builder, By } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome.js'
 
 export default async (cookie, link) => {
-	if (!link) link = 'https://buff.163.com/s/goods.html?game=csgo&goods_id=878839'
+	link = 'https://buff.163.com/goods/928046?appid=730&classid=5327976248&instanceid=188530139&assetid=36098436465&contextid=2&sell_order_id=3246466953-8137-148340191'
     let options = new Options();
     options.addArguments('--headless');
     options.addArguments('--disable-gpu');
@@ -15,14 +15,14 @@ export default async (cookie, link) => {
         await driver.get('https://buff.163.com/market/csgo');
         await driver.manage().deleteAllCookies();
 
-		cookie.split(';').map(async c => {
-			let [name, value] = c.split('=');
-			if (name && value) await driver.manage().addCookie({ name, value });
-		});
-        // await driver.manage().addCookie({ name: 'session', value: '1-Z6kP9tlHypQ3qoYXwLhaA8lHJuUYa-aKXJGu8ULFll072023945832' })
+		// cookie.split(';').map(async c => {
+		// 	let [name, value] = c.split('=');
+		// 	if (name && value) await driver.manage().addCookie({ name, value });
+		// });
+        await driver.manage().addCookie({ name: 'session', value: '1-cZteGww_0hykAvkMEnjDF6Yw4RbkHortaBg7KkDtydhW2030409634' })
 
         await driver.get(link);
-        await driver.sleep(5000);
+        await driver.sleep(2000);
 
 
         const firstButton = await driver.findElement(By.className('i_Btn i_Btn_big btn-buy-order'));
