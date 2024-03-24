@@ -25,7 +25,7 @@ export default async (cookie, link) => {
         await driver.sleep(5000);
 
 
-        const firstButton = await driver.findElement(By.className('i_Btn i_Btn_big btn-buy-order '));
+        const firstButton = await driver.findElement(By.className('i_Btn i_Btn_big btn-buy-order'));
         await firstButton.click();
 
 
