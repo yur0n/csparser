@@ -56,7 +56,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //routes
-app.get('/autobuy', async (req, res) => {
+app.get('/autobuy', ensureAuthenticated, async (req, res) => {
     let { link } = req.query;
     let { cookie } = await User.findById(req.user.id).exec();
     if (cookie) await autobuy(cookie, link);

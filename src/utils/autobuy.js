@@ -1,8 +1,6 @@
 import { Builder, By } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome.js'
 
-
-
 export default async (cookie, link) => {
 	if (!link) link = 'https://buff.163.com/s/goods.html?game=csgo&goods_id=878839'
     let options = new Options();
