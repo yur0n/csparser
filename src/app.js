@@ -13,7 +13,6 @@ import User from './models/user.js';
 
 import stickerParser from './utils/stickerParser.js';
 import floatParser from './utils/floatParser.js';
-import autobuy from './utils/autobuy.js';
 
 import authSteam from './routes/authSteam.js';
 
@@ -56,13 +55,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //routes
-app.get('/autobuy', ensureAuthenticated, async (req, res) => {
-    let { link } = req.query;
-    let { cookie } = await User.findById(req.user.id).exec();
-    if (cookie) await autobuy(cookie, link);
-    res.send({ status: 'ok' });
-});
-
 app.use('/auth', authSteam);
 
 app.get('/', (req, res) => {
@@ -125,17 +117,17 @@ app.get('/logout', function(req, res, next) {
 });
 
 app.post('/sticker-parser', ensureSubscribed, async (req, res) => {
-    const { skins, minProfit, stickerOverpay, chatId } = req.body;
+    const { skins, minProfit, stickerOverpay, chatId, buy } = req.body;
     if (!skins.length) return res.send({ error: 'Please, provide items' })
-    const data = await stickerParser(skins, minProfit, stickerOverpay, req.user.id);
+    const data = await stickerParser(skins, minProfit, stickerOverpay, buy, req.user.id);
     res.send(data);
     if (chatId && !data.error) sendToBotStickers(data, chatId);
 });
 
 app.post('/float-parser', ensureSubscribed, async (req, res) => {
-    const { skins, chatId } = req.body;
+    const { skins, chatId, buy } = req.body;
     if (!skins.length) return res.send({ error: 'Please, provide items' })
-    const data = await floatParser(skins, req.user.id);
+    const data = await floatParser(skins, buy, req.user.id);
     res.send(data);
     if (chatId && !data.error) sendToBotFloat(data, chatId);
 });

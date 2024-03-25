@@ -1,5 +1,6 @@
 import User from '../models/user.js';
 import { skinIDs } from './getSkinIDs.js'
+import autobuy from './autobuy.js';
 
 async function getData(url, cookie, attempt = 0) { 
 	if (attempt >= 2) return { error: 'Buff163 Login Required' }
@@ -93,7 +94,7 @@ async function floatparse(goodId, float_min, float_max, cookie) {
     }
 }
 
-export default async (skins, steamID) => {
+export default async (skins, buy, steamID) => {
     let { cookie } = await User.findById(steamID, { cookie: 1 , _id: 0 })
     if (!cookie) return { error: 'No cookie provided' }
     const result = [];
@@ -103,10 +104,18 @@ export default async (skins, steamID) => {
             let res = await floatparse(id, skin.minFloat, skin.maxFloat, cookie)
             if (res.error) return res
             result.push(res);
+            if (buy && res.length) autobuySkins(cookie, res);
         } else {
             result.push([{ wrongName: skin.name }])
         }
         await new Promise(resolve => setTimeout(resolve, 3000));
     }
     return result;
+}
+
+async function autobuySkins(cookie, items) {
+    for (const item of items) {
+        await autobuy(cookie, item.link)
+        await new Promise(resolve => setTimeout(resolve, 3000));
+    }
 }

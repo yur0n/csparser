@@ -2,7 +2,6 @@ import { Builder, By } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome.js'
 
 export default async (cookie, link) => {
-	link = 'https://buff.163.com/goods/928046?appid=730&classid=5327976248&instanceid=188530139&assetid=36098436465&contextid=2&sell_order_id=3246466953-8137-148340191'
     let options = new Options();
     options.addArguments('--headless');
     options.addArguments('--disable-gpu');
@@ -11,43 +10,41 @@ export default async (cookie, link) => {
     let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
     try {
-        
         await driver.get('https://buff.163.com/market/csgo');
-        await driver.manage().deleteAllCookies();
-
-		// cookie.split(';').map(async c => {
-		// 	let [name, value] = c.split('=');
-		// 	if (name && value) await driver.manage().addCookie({ name, value });
-		// });
-        await driver.manage().addCookie({ name: 'session', value: '1-cZteGww_0hykAvkMEnjDF6Yw4RbkHortaBg7KkDtydhW2030409634' })
-
+		cookie.split(';').map(async c => {
+			let [name, value] = c.split('=');
+			if (name && value)await driver.manage().addCookie({ name, value });
+		});
+        // await driver.manage().addCookie({ name: 'session', value: '1-cZteGww_0hykAvkMEnjDF6Yw4RbkHortaBg7KkDtydhW2030409634' })
         await driver.get(link);
         await driver.sleep(2000);
-
-
-        const firstButton = await driver.findElement(By.className('i_Btn i_Btn_big btn-buy-order'));
-        await firstButton.click();
-
-
+        // driver.takeScreenshot().then(
+        //     function(image, err) {
+        //         fs.writeFile('out1.png', image, 'base64', function(err) {
+        //             console.log(err);
+        //         });
+        //     }
+        // );
+        const buyBtn = await driver.findElement(By.className('i_Btn i_Btn_big btn-buy-order'));
+        await buyBtn.click();
         await driver.sleep(2000);
-
-        // let script1 = "return document.querySelector('.total_price').innerText;";
-        // let script2 = "return document.querySelector('.pay-method-list').childNodes[3].children[1].childNodes[1].childNodes[1].innerText;";
-        // let totalPrice = await driver.executeScript(script1);
-        // let balance = await driver.executeScript(script2);
-        // let final = +balance.split(' ')[1] - +totalPrice.split(' ')[1];
-        // console.log(final);
-		// console.log(await driver.executeScript(`return document.querySelector('.store-account').children[0].children[0].innerText`))
-        const secondButton = await driver.findElement(By.className('i_Btn pay-btn'));
-        await secondButton.click();
-
-        await driver.sleep(5000);
-        // const btn = await driver.findElement(By.id('ask_seller'));
-
-        const thirdButton = await driver.findElement(By.xpath('//*[@class="i_Btn" and @id="ask_seller"]'));
-        await thirdButton.click();
-
-        await driver.sleep(5000);
+        // try {
+        //     let script1 = "return document.querySelector('.total_price').innerText;";
+        //     let script2 = "return document.querySelector('.pay-method-list').childNodes[3].children[1].childNodes[1].childNodes[1].innerText;";
+        //     let totalPrice = await driver.executeScript(script1);
+        //     let balance = await driver.executeScript(script2);
+        //     let final = +balance.split(' ')[1] - +totalPrice.split(' ')[1];
+        //     console.log(final);
+        //     console.log(await driver.executeScript(`return document.querySelector('.store-account').children[0].children[0].innerText`))
+        // }
+        // catch (e) {
+        // }
+        const payBtn = await driver.findElement(By.className('i_Btn pay-btn'));
+        await payBtn.click();
+        await driver.sleep(3000);
+        const askSellerBtn = await driver.findElement(By.xpath('//*[@class="i_Btn" and @id="ask_seller"]'));
+        await askSellerBtn.click();
+        // await driver.sleep(5000);
         // driver.takeScreenshot().then(
         //     function(image, err) {
         //         fs.writeFile('out2.png', image, 'base64', function(err) {
@@ -56,8 +53,8 @@ export default async (cookie, link) => {
         //     }
         // );
         
-    } catch (error) {
-        console.error("Ошибка:", error);
+    } catch (e) {
+        console.error(e);
     } finally {
         await driver.quit();
     }

@@ -1,6 +1,6 @@
 import User from '../models/user.js';
 import { pricesDict, skinIDs } from './getSkinIDs.js'
-
+import autobuy from './autobuy.js';
 
 async function getData(url, cookie, attempt = 0) { 
 	if (attempt >= 2) return { error: 'Buff163 Login Required' }
@@ -99,7 +99,7 @@ async function parseStickers(goodsId, minProfit, stickerOverpay, cookie) {
     }
 }
 
-export default async (skins, minProfit, stickerOverpay, steamID) => {
+export default async (skins, minProfit, stickerOverpay, buy, steamID) => {
 	let { cookie } = await User.findById(steamID, { cookie: 1 , _id: 0 })
 	if (!cookie) return { error: 'No cookie provided' }
 	const result = [];
@@ -107,14 +107,22 @@ export default async (skins, minProfit, stickerOverpay, steamID) => {
 	for (const skin of skins) {
 		let id = skinIDs[skin];
 		if (id) {
-            let res = await parseStickers(id, minProfit, stickerOverpay, cookie)
+    		let res = await parseStickers(id, minProfit, stickerOverpay, cookie)
 			if (res.error) return res
-            result.push(res);
-        } else {
+			result.push(res);
+			if (buy && res.length) autobuySkins(cookie, res);
+		} else {
 			result.push([{ wrongName: skin }])
 		}
 		await new Promise(resolve => setTimeout(resolve, 3000));
 	}
 	return result
+}
+
+async function autobuySkins(cookie, items) {
+	for (const item of items) {
+		await autobuy(cookie, item.link)
+		await new Promise(resolve => setTimeout(resolve, 3000));
+	}
 }
 
