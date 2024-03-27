@@ -36,6 +36,7 @@ async function sendToBotStickers (data, chatId) {
                 \nItem price: ¥${item.defaultPrice}
                 \nProfit: 🔥 ${item.roundedProfit}% 🔥
                 \nStickers total price: ¥${item.total_sticker_price}
+                \nAutobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}
                 \nStickers:
                 `;
             item.stickers.forEach(sticker => {
@@ -64,7 +65,7 @@ async function sendToBotFloat (data, chatId) {
             if (item.wrongName) continue;
             let message = `
                 \n${item.name}
-                \nFloat: ${item.float}
+                ${item.float ? `\nFloat: ${item.float}` : ''}
                 \nPrice: ¥${item.price}
                 \nAutobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}
                 `;

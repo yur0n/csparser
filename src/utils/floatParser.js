@@ -17,12 +17,14 @@ async function getData(url, cookie, attempt = 0) {
 			return { error: res.code, url: res.confirm_entry.entry.url }
 		}
 		else if (res.code == 'Action Forbidden') {
-			return { error: res.code + res.error }
+			return { error: res.code + ': ' + res.error }
 		}
 		else if (res.code == 'Login Required') {
 			await new Promise(resolve => setTimeout(resolve, 2000));
 			return await getData(url, cookie, attempt + 1)
-		} else if (res.code == 'OK'){
+        } else if (res.error){
+            return { error: res.code + ': ' + res.error }
+		} else if (res.code == 'OK') {
 			return res.data
 		}
 	} else {

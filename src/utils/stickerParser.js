@@ -22,6 +22,8 @@ async function getData(url, cookie, attempt = 0) {
 		else if (res.code == 'Login Required') {
 			await new Promise(resolve => setTimeout(resolve, 2000));
 			return await getData(url, cookie, attempt + 1)
+		} else if (res.error){
+			return { error: res.code + ': ' + res.error }
 		} else if (res.code == 'OK'){
 			return res.data
 		}
@@ -88,7 +90,8 @@ async function parseStickers(goodsId, minProfit, stickerOverpay, cookie) {
 					link,
 					photo,
 					total_sticker_price: totalStickerPrice.toFixed(2),
-					roundedProfit
+					roundedProfit,
+					buyStatus: 0
 				});
 			}
 		}
@@ -126,11 +129,8 @@ export default async (skins, minProfit, stickerOverpay, buy, steamID) => {
 
 async function autobuySkins(cookie, items) {
 	console.log('Autobuying items: ' + items[0]);
-	for (let i=0; i < 2; i++) {
-			items[i].buyStatus = await autobuy(cookie, items[i].link);
+	for (const item of items) {
+	    item.buyStatus = await autobuy(cookie, item.link);
 	}
-	// for (const item of items) {
-	//     item.buyStatus = await autobuy(cookie, item.link);
-	// }
 	return items;
 }

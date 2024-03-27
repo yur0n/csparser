@@ -15,9 +15,9 @@ tgChatId.addEventListener('change', (e) => {
     localStorage.setItem('chatId', e.target.value)
 })
 
-autobuy.checked = localStorage.getItem('autobuy') === 'true'
+autobuy.checked = localStorage.getItem('autobuy') == 1
 autobuy.addEventListener('change', (e) => {
-    localStorage.setItem('autobuy', e.target.checked)
+    localStorage.setItem('autobuy', e.target.checked ? 1: 0)
 })
 
 popupSettingsButtonOpen.addEventListener("click", (e) => {
