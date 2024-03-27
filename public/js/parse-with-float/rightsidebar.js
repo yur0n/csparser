@@ -98,9 +98,10 @@ async function loadItems(itemNameText, item = { minFloat: 0.01, maxFloat: 0.02, 
 	if (!item.name) await sideBarStorage.setItem(itemNameText, { name: itemNameText, ...item });
 
 	floatRange.querySelectorAll('input').forEach(input => {
-		input.addEventListener('input', async function(e) {
+		input.addEventListener('change', async function(e) {
 			sideBarStorage.getItem(itemNameText)
 			.then(item => {
+				if (!e.target.value || e.target.value < 0.01) e.target.value = 0.01;
 				item[e.target.name] = +(e.target.value);
 				sideBarStorage.setItem(itemNameText, item);
 			})
