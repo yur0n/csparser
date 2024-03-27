@@ -22,6 +22,7 @@ closePopup.addEventListener("click", function() {
 });
 
 window.addEventListener("message", function(event) {
+	// console.log('event.data:', event.data)
 	if (event.source != window)
 	  return;
   

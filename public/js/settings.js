@@ -7,12 +7,18 @@ let popupSettingsButtonClose = popupSettings.querySelector(".popup__close");
 let functionCloseActive = false;
 let rangeInputsValue = document.querySelectorAll("#range-value");
 let scrollbarWidth;
+const autobuy = document.querySelector('.checkbox_autobuy input');
 
 let tgChatId = document.querySelector('input[name="tg_chat_id"]')
 tgChatId.value = localStorage.getItem('chatId') || '0'
 tgChatId.addEventListener('change', (e) => {
     localStorage.setItem('chatId', e.target.value)
-}) 
+})
+
+autobuy.checked = localStorage.getItem('autobuy') === 'true'
+autobuy.addEventListener('change', (e) => {
+    localStorage.setItem('autobuy', e.target.checked)
+})
 
 popupSettingsButtonOpen.addEventListener("click", (e) => {
     e.preventDefault();

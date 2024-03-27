@@ -2,15 +2,19 @@ import { Builder, By } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome.js'
 
 export default async (cookie, link) => {
-    let options = new Options();
-    options.addArguments('--headless');
-    options.addArguments('--disable-gpu');
-	options.addArguments('--no-sandbox');
-
-    let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
+    let driver;
 
     try {
+        let options = new Options();
+        options.addArguments('--headless');
+        options.addArguments('--disable-gpu');
+        options.addArguments('--no-sandbox');
+        options.addArguments('--disable-webgl');
+
+        driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
+
         await driver.get('https://buff.163.com/market/csgo');
+
 		cookie.split(';').map(async c => {
 			let [name, value] = c.split('=');
 			if (name && value)await driver.manage().addCookie({ name, value });
@@ -52,9 +56,10 @@ export default async (cookie, link) => {
         //         });
         //     }
         // );
-        
+        return true;
     } catch (e) {
         console.error(e);
+        return false;
     } finally {
         await driver.quit();
     }

@@ -68,7 +68,6 @@ async function loadItems(itemNameText) {
 	newItemContainer.appendChild(itemName);
 	itemsDiv.appendChild(newItemContainer);
 
-	selectableDivs = document.querySelectorAll('.item-name');
 	itemName.addEventListener('click', function() {
 		this.classList.toggle('selected');
 	});

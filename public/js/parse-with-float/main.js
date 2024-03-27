@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 skins.push(item)
             }
             const chatId = localStorage.getItem('chatId')
+            const autobuy = localStorage.getItem('autobuy');
 
             let mes = document.createElement('div')
             mes.innerHTML = `<h2>Working...</h2>`
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ skins, chatId })
+                body: JSON.stringify({ skins, chatId, autobuy })
             });
 
             const responseData = await response.json();
@@ -56,10 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p>Name: ${item.name}</p>
                         <p>Float: ${item.float}</p>
                         <p>Price: ¥${item.price}</p>
-                        <p>Default Price: ¥${item.defaultPrice}</p>
+                        <p>Autobuy Status: ${item.buyStatus ? 'bought successful' : 'not bought'}</p>
                         <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         <hr>
                         `;
+                        // <p>Default Price: ¥${item.defaultPrice}</p>
                         windowText.appendChild(resultItem);
                     });
                 });

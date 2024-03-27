@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearButton = document.getElementById('button-clear');
     const offButton = document.querySelector('.header_button:nth-last-child(2)');
 
+
     let isRunning = false;
     let interval
 
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const chatId = localStorage.getItem('chatId');
             const minProfit = localStorage.getItem('minProfit');
             const stickerOverpay = localStorage.getItem('stickerOverpay');
+            const autobuy = localStorage.getItem('autobuy');
             
             let mes = document.createElement('div')
             mes.innerHTML = `<h2>Working...</h2>`
@@ -31,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ skins, minProfit, stickerOverpay, chatId })
+                body: JSON.stringify({ skins, minProfit, stickerOverpay, chatId, autobuy })
             });
 
             const responseData = await response.json();

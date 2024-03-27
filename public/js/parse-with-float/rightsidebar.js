@@ -56,7 +56,7 @@ async function addItem(e) {
 	await loadItems(itemNameText);
 }
 
-async function loadItems(itemNameText, item = { minFloat: 0.01, maxFloat: 0.02 }) {
+async function loadItems(itemNameText, item = { minFloat: 0.01, maxFloat: 0.02, maxPrice: 50 }) {
 
 	const newItemContainer = document.createElement('div');
 	newItemContainer.classList.add('item-container'); 
@@ -80,33 +80,31 @@ async function loadItems(itemNameText, item = { minFloat: 0.01, maxFloat: 0.02 }
 	maxFloatInput.value = item.maxFloat;
 	maxFloatInput.name = "maxFloat";
 	floatRange.appendChild(maxFloatInput);
+
+	const maxPriceInput = document.createElement('input');
+	maxPriceInput.type = "number";
+	maxPriceInput.value = item.maxPrice;
+	maxPriceInput.name = "maxPrice";
+	floatRange.appendChild(maxPriceInput);
   
 	newItemContainer.appendChild(floatRange);
 
 	itemsDiv.appendChild(newItemContainer);
 
-	selectableDivs = document.querySelectorAll('.item-name');
 	itemName.addEventListener('click', function() {
 		this.classList.toggle('selected');
 	});
 
-	if (!item.name) await sideBarStorage.setItem(itemNameText, { name: itemNameText, minFloat: 0.01, maxFloat: 0.02 });
+	if (!item.name) await sideBarStorage.setItem(itemNameText, { name: itemNameText, ...item });
 
-	maxFloatInput.addEventListener('input', async function() {
-		sideBarStorage.getItem(itemNameText)
-		.then(item => {
-				item.maxFloat = +(this.value);
+	floatRange.querySelectorAll('input').forEach(input => {
+		input.addEventListener('input', async function(e) {
+			sideBarStorage.getItem(itemNameText)
+			.then(item => {
+				item[e.target.name] = +(e.target.value);
 				sideBarStorage.setItem(itemNameText, item);
-		})
-		.catch(console.error);
-	});
-
-	minFloatInput.addEventListener('input', async function() {
-		sideBarStorage.getItem(itemNameText)
-		.then(item => {
-				item.minFloat = +(this.value);
-				sideBarStorage.setItem(itemNameText, item);
-		})
-		.catch(console.error);
+			})
+			.catch(console.error);
+		});
 	});
 }

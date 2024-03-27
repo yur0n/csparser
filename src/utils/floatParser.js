@@ -31,43 +31,44 @@ async function getData(url, cookie, attempt = 0) {
 	}
 }
 
-async function getMinPrice(goodsId) {
-    const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&` +
-    `goods_id=${goodsId}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1`;
-    try {
-        const response = await fetch(url);
-        if (response.ok) {
-            const obj = await response.json();
-            const items = obj.data.items || [];
+// async function getMinPrice(goodsId) {
+//     const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo&` +
+//     `goods_id=${goodsId}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1`;
+//     try {
+//         const response = await fetch(url);
+//         if (response.ok) {
+//             const obj = await response.json();
+//             const items = obj.data.items || [];
 
-            if (items.length >= 4) {
-                const fourthItem = items[3];
-                const price = parseFloat(fourthItem.price);
-                return price;
-            }
-        }
-    } catch (error) {
-        console.error(`Error fetching data for goods_id ${goodsId} : ${error.message}`);
-        return 0;
-    }
-}
+//             if (items.length >= 4) {
+//                 const fourthItem = items[3];
+//                 const price = parseFloat(fourthItem.price);
+//                 return price;
+//             }
+//         }
+//     } catch (error) {
+//         console.error(`Error fetching data for goods_id ${goodsId} : ${error.message}`);
+//         return 0;
+//     }
+// }
 
-async function floatparse(goodId, float_min, float_max, cookie) {
+async function floatparse(goodId, minFloat, maxFloat, maxPrice, cookie) {
     const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo` +
     `&goods_id=${goodId}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1` +
-    `&min_paintwear=${float_min}&max_paintwear=${float_max}&_=1710318564214`;
+    `${minFloat ? '&min_paintwear=' + minFloat : ''}${maxFloat ? '&max_paintwear=' + maxFloat : ''}&max_price=${maxPrice}&_=1710318564214`;
     try {
         let data = await getData(url, cookie)
 		if (data.error) return data
 		const items = data.items || [];
         const goodsInfos = data.goods_infos || {};
-        const minPrice = await getMinPrice(goodId);
+        // const minPrice = await getMinPrice(goodId);
 
         const result = [];
         for (const item of items) {
-            let price = item.price;
-            let name = goodsInfos[goodId].name || '';
-            let float = item.asset_info.paintwear;
+            const price = item.price;
+            const name = goodsInfos[goodId].name || '';
+            const float = item.asset_info.paintwear;
+
             const assetid = item.asset_info.assetid;
 			const classid = item.asset_info.classid;
 			const instanceid = item.asset_info.instanceid;
@@ -82,7 +83,8 @@ async function floatparse(goodId, float_min, float_max, cookie) {
                 name,
                 float,
                 price,
-                defaultPrice: minPrice,
+                buyStatus: 0,
+                // defaultPrice: minPrice,
                 link,
                 photo
             });
@@ -95,27 +97,36 @@ async function floatparse(goodId, float_min, float_max, cookie) {
 }
 
 export default async (skins, buy, steamID) => {
-    let { cookie } = await User.findById(steamID, { cookie: 1 , _id: 0 })
-    if (!cookie) return { error: 'No cookie provided' }
-    const result = [];
-    for (const skin of skins) {
-        let id = skinIDs[skin.name];
-        if (id) {
-            let res = await floatparse(id, skin.minFloat, skin.maxFloat, cookie)
-            if (res.error) return res
-            result.push(res);
-            if (buy && res.length) autobuySkins(cookie, res);
-        } else {
-            result.push([{ wrongName: skin.name }])
+    try {
+        let { cookie } = await User.findById(steamID, { cookie: 1 , _id: 0 })
+        if (!cookie) return { error: 'No cookie provided' }
+        const result = [];
+        for (const skin of skins) {
+            let id = skinIDs[skin.name];
+            if (id) {
+                let res = await floatparse(id, skin.minFloat, skin.maxFloat, skin.maxPrice, cookie)
+                if (res.error) return res
+                if (buy && res.length) res = await autobuySkins(cookie, res);
+                result.push(res);
+            } else {
+                result.push([{ wrongName: skin.name }])
+            }
+            if (!buy) await new Promise(resolve => setTimeout(resolve, 3000));
         }
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        return result;
+    } catch (error) {
+        console.error(error);
+        return { error: 'Server error' };
     }
-    return result;
 }
 
 async function autobuySkins(cookie, items) {
-    for (const item of items) {
-        await autobuy(cookie, item.link)
-        await new Promise(resolve => setTimeout(resolve, 3000));
+    console.log('Autobuying items: ' + items[0]);
+    for (let i=0; i < 2; i++) {
+        items[i].buyStatus = await autobuy(cookie, items[i].link);
     }
+    // for (const item of items) {
+    //     item.buyStatus = await autobuy(cookie, item.link);
+    // }
+    return items;
 }
