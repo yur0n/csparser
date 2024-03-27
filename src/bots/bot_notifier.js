@@ -66,7 +66,7 @@ async function sendToBotFloat (data, chatId) {
                 \n${item.name}
                 \nFloat: ${item.float}
                 \nPrice: ¥${item.price}
-                \nAutobuy Status: ${item.buyStatus}
+                \nAutobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}
                 `;
                 // \nDefault Price: ¥${item.defaultPrice}
             await bot.api.sendPhoto(chatId, item.photo, {

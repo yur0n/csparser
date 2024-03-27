@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p>Name: ${item.name}</p>
                         <p>Float: ${item.float}</p>
                         <p>Price: ¥${item.price}</p>
-                        <p>Autobuy Status: ${item.buyStatus ? 'bought successful' : 'not bought'}</p>
+                        <p>Autobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}</p>
                         <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         <hr>
                         `;
