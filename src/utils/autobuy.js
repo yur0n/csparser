@@ -58,7 +58,7 @@ export default async (cookie, link) => {
         // );
         return true;
     } catch (e) {
-        console.error(e);
+        console.error(e.message);
         return false;
     } finally {
         await driver.quit();

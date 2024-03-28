@@ -126,14 +126,13 @@ app.post('/sticker-parser', ensureSubscribed, async (req, res) => {
 
 app.post('/float-parser', ensureSubscribed, async (req, res) => {
     const { skins, chatId, autobuy } = req.body;
-    console.log(typeof autobuy)  
     if (!skins.length) return res.send({ error: 'Please, provide items' })
     const data = await floatParser(skins, autobuy, req.user.id);
     res.send(data);
     if (chatId && !data.error) sendToBotFloat(data, chatId);
 });
 
-app.use((err, req, res, next) => {  // error handler
+app.use((err, req, res, next) => {
     if (err) {
         console.log(err)
     } else {
