@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const chatId = localStorage.getItem('chatId');
             const minProfit = localStorage.getItem('minProfit');
             const stickerOverpay = localStorage.getItem('stickerOverpay');
-            const autobuy = localStorage.getItem('autobuy');
+            const autobuy = localStorage.getItem('autobuy_sticker');
             
             let mes = document.createElement('div')
             mes.innerHTML = `<h2>Working...</h2>`
@@ -130,5 +130,11 @@ document.addEventListener('DOMContentLoaded', function () {
     clearButton.addEventListener('click', function(event) {
         event.preventDefault();
         windowText.innerText = '';
+    });
+
+    const autobuy = document.querySelector('.checkbox_autobuy input');
+    autobuy.checked = localStorage.getItem('autobuy_sticker') == 1
+    autobuy.addEventListener('change', (e) => {
+        localStorage.setItem('autobuy_sticker', e.target.checked ? 1: 0)
     });
 });

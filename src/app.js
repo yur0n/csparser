@@ -128,7 +128,6 @@ app.post('/float-parser', ensureSubscribed, async (req, res) => {
     const { skins, chatId, autobuy } = req.body;
     if (!skins.length) return res.send({ error: 'Please, provide items' })
     const data = await floatParser(skins, parseInt(autobuy), req.user.id);
-    console.log(data)
     res.send(data);
     if (chatId && !data.error) sendToBotFloat(data, chatId);
 });

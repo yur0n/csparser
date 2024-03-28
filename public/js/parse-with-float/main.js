@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 skins.push(item)
             }
             const chatId = localStorage.getItem('chatId')
-            const autobuy = localStorage.getItem('autobuy');
+            const autobuy = localStorage.getItem('autobuy_float');
 
             let mes = document.createElement('div')
             mes.innerHTML = `<h2>Working...</h2>`
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } catch (error) {
             console.error('Error fetching data:', error);
-            windowText.innerText = 'Failed to fetch data';
+            windowText.innerHTML = '<h2>Failed to fetch data</h2>';
         }
 
         if (isRunning) {
@@ -125,5 +125,11 @@ document.addEventListener('DOMContentLoaded', function () {
     clearButton.addEventListener('click', function(event) {
         event.preventDefault();
         windowText.innerText = '';
+    });
+
+    const autobuy = document.querySelector('.checkbox_autobuy input');
+    autobuy.checked = localStorage.getItem('autobuy_float') == 1
+    autobuy.addEventListener('change', (e) => {
+        localStorage.setItem('autobuy_float', e.target.checked ? 1: 0)
     });
 });
