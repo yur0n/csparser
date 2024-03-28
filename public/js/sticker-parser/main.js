@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const chatId = localStorage.getItem('chatId');
             const minProfit = localStorage.getItem('minProfit');
             const stickerOverpay = localStorage.getItem('stickerOverpay');
-            const autobuy = localStorage.getItem('autobuy_sticker');
+            const autobuy = parseFloat(localStorage.getItem('autobuy_sticker'));
             
             let mes = document.createElement('div')
             mes.innerHTML = `<h2>Working...</h2>`

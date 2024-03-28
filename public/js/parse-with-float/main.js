@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 skins.push(item)
             }
             const chatId = localStorage.getItem('chatId')
-            const autobuy = localStorage.getItem('autobuy_float');
+            const autobuy = parseFloat(localStorage.getItem('autobuy_float'));
 
             let mes = document.createElement('div')
             mes.innerHTML = `<h2>Working...</h2>`
@@ -57,10 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p>Name: ${item.name}</p>
                         ${item.float ? `<p>Float: ${item.float}</p>` : ''}
                         <p>Price: ¥${item.price}</p>
-                        <p>Autobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}</p>
+                        ${autobuy ? `<p>Autobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}</p>` : ''}
                         <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         <hr>
                         `;
+                        console.log(autobuy)
                         // <p>Default Price: ¥${item.defaultPrice}</p>
                         windowText.appendChild(resultItem);
                     });
