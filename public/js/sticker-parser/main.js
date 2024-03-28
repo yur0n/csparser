@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <ul>${stickerList}</ul>
                         <p>Stickers Total Price: ¥${item.total_sticker_price}</p>
                         <p>Profit: ${item.roundedProfit}%</p>
-                        <p>Autobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}</p>
+                        ${autobuy ? `<p>Autobuy Status: ${item.buyStatus ? 'bought successfuly' : 'not bought'}</p>` : ''}
                         <a href="${item.link}" target="_blank"><p>💰  BUY  💰</p></a>
                         <hr>
                         `;

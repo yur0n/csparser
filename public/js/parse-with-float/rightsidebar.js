@@ -101,7 +101,6 @@ async function loadItems(itemNameText, item = { minFloat: '', maxFloat: '', maxP
 		input.addEventListener('change', async function(e) {
 			sideBarStorage.getItem(itemNameText)
 			.then(item => {
-				// if (e.target.name == 'maxPrice' && e.target.value < 0.01)) e.target.value = 0.01;
 				item[e.target.name] = +(e.target.value);
 				sideBarStorage.setItem(itemNameText, item);
 			})
