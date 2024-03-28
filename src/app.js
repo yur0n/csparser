@@ -119,7 +119,7 @@ app.get('/logout', function(req, res, next) {
 app.post('/sticker-parser', ensureSubscribed, async (req, res) => {
     const { skins, minProfit, stickerOverpay, chatId, autobuy } = req.body;
     if (!skins.length) return res.send({ error: 'Please, provide items' })
-    const data = await stickerParser(skins, minProfit, stickerOverpay, autobuy, req.user.id);
+    const data = await stickerParser(skins, minProfit, stickerOverpay, parseInt(autobuy), req.user.id);
     res.send(data);
     if (chatId && !data.error) sendToBotStickers(data, chatId);
 });

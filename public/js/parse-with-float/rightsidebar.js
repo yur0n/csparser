@@ -56,7 +56,7 @@ async function addItem(e) {
 	await loadItems(itemNameText);
 }
 
-async function loadItems(itemNameText, item = { minFloat: 0.01, maxFloat: 0.02, maxPrice: 50 }) {
+async function loadItems(itemNameText, item = { minFloat: '', maxFloat: '', maxPrice: '' }) {
 
 	const newItemContainer = document.createElement('div');
 	newItemContainer.classList.add('item-container'); 
@@ -101,7 +101,7 @@ async function loadItems(itemNameText, item = { minFloat: 0.01, maxFloat: 0.02, 
 		input.addEventListener('change', async function(e) {
 			sideBarStorage.getItem(itemNameText)
 			.then(item => {
-				if (!e.target.value || e.target.value < 0.01) e.target.value = 0.01;
+				// if (e.target.name == 'maxPrice' && e.target.value < 0.01)) e.target.value = 0.01;
 				item[e.target.name] = +(e.target.value);
 				sideBarStorage.setItem(itemNameText, item);
 			})

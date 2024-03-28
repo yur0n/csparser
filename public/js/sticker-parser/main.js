@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let skins = await sideBarStorage.keys();
             if (!skins.length) return replyWithErrorBlock({ error: 'No items in the list' });
 
-            console.log(skins)
-
             const chatId = localStorage.getItem('chatId');
             const minProfit = localStorage.getItem('minProfit');
             const stickerOverpay = localStorage.getItem('stickerOverpay');

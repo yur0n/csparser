@@ -65,13 +65,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         windowText.appendChild(resultItem);
                     });
                 });
-                if (!windowText.innerHTML) windowText.innerHTML = 'No data available';
+                if (!windowText.innerHTML) windowText.innerHTML = '<h2>No data available</h2>';
             } else if (responseData?.error) {
                 replyWithErrorBlock(responseData)
             } else if (responseData?.message){
                 windowText.innerText = responseData.message;
             } else {
-                windowText.innerText = 'No data available';
+                windowText.innerHTML = '<h2>No data available</h2>';
             }
         } catch (error) {
             console.error('Error fetching data:', error);

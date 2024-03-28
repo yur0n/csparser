@@ -57,7 +57,7 @@ async function getData(url, cookie, attempt = 0) {
 async function floatparse(goodId, minFloat, maxFloat, maxPrice, cookie) {
     const url = `https://buff.163.com/api/market/goods/sell_order?game=csgo` +
     `&goods_id=${goodId}&page_num=1&sort_by=default&mode=&allow_tradable_cooldown=1` +
-    `${minFloat ? '&min_paintwear=' + minFloat : ''}${maxFloat ? '&max_paintwear=' + maxFloat : ''}&max_price=${maxPrice}&_=1710318564214`;
+    `${minFloat ? '&min_paintwear=' + minFloat : ''}${maxFloat ? '&max_paintwear=' + maxFloat : ''}${maxPrice ? '&max_price=' + maxPrice : ''}&_=1710318564214`;
     try {
         let data = await getData(url, cookie)
 		if (data.error) return data
@@ -85,7 +85,7 @@ async function floatparse(goodId, minFloat, maxFloat, maxPrice, cookie) {
                 name,
                 float,
                 price,
-                buyStatus: 0,
+                buyStatus: false,
                 // defaultPrice: minPrice,
                 link,
                 photo

@@ -17,7 +17,7 @@ export default async (cookie, link) => {
 
 		cookie.split(';').map(async c => {
 			let [name, value] = c.split('=');
-			if (name && value)await driver.manage().addCookie({ name, value });
+			if (name && value) await driver.manage().addCookie({ name, value });
 		});
         // await driver.manage().addCookie({ name: 'session', value: '1-cZteGww_0hykAvkMEnjDF6Yw4RbkHortaBg7KkDtydhW2030409634' })
         await driver.get(link);
